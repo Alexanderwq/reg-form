@@ -1,5 +1,16 @@
+import axios from "axios";
+
 export default {
-    signin(email, password) {
-        return
+    sendConfirmationCode(email) {
+        return axios.post('/send_code', { email });
+    },
+
+    signUp(userName, email, password, confirmPassword) {
+        return axios.post('/registration', {
+            userName,
+            email,
+            password,
+            confirmPassword,
+        });
     },
 }
