@@ -5,7 +5,6 @@ const EmailCodesModel = mongoose.Schema(
     email: {
         type: String,
         required: true,
-        unique: true,
     },
     code: {
         type: String,
