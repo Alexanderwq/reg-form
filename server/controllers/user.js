@@ -6,6 +6,29 @@ import jwt from 'jsonwebtoken'
 dotenv.config()
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
+export const login = async (req, res) => {
+    const { email, password } = req.body
+
+    try {
+        const user = await User.findOne({ email })
+        if (!user) res.status(404).json({ message: 'Пользователь не найден' })
+
+        const isCorrectPassword = await bcrypt.compare(password, user.password)
+        if (!isCorrectPassword) res.status(400).json({ message: 'Неправильный пароль' })
+
+        const token = jwt.sign(
+            {id: user._id, email: user.email },
+            TOKEN_SECRET,
+            { expiresIn: '30m'}
+        )
+
+        res.status(200).json({ user, token })
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({ message: 'Произошла ошибка' })
+    }
+}
+
 export const registration = async (req, res) => {
     const { userName, email, password, confirmPassword } = req.body
 
