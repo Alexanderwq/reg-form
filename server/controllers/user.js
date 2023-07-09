@@ -11,6 +11,8 @@ export const login = async (req, res) => {
     const { email, password } = req.body
 
     try {
+        if (!email || !password) return res.status(500).json({})
+
         const user = await User.findOne({ email })
         if (!user) res.status(404).json({ message: 'Пользователь не найден' })
 
