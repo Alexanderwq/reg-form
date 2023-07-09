@@ -64,5 +64,9 @@ export const useUserStore = defineStore('user', {
                 this.code
             );
         },
+
+        signIn() {
+            return api.signIn(this.email, this.password)
+        },
     },
 })

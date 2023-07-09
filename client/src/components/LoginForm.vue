@@ -5,15 +5,18 @@
     </p>
     <FormInput
       :value="userStore.email"
+      @setValue="userStore.setEmail"
       name="email"
       label="Email"
     />
     <FormInput
         :value="userStore.password"
+        @setValue="userStore.setPassword"
         name="password"
         label="Пароль"
     />
     <FormButton
+        @click="signIn"
         class="login-form__button"
     >
       <template v-slot:text>
@@ -27,8 +30,41 @@
   import FormInput from "@/common/FormInput.vue";
   import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
+  import {useAlertStore} from "@/stores/alertStore";
 
   const userStore = useUserStore()
+  const { showAlert } = useAlertStore()
+
+  function formIsValid() {
+    if (userStore.emailIsEmpty) {
+      showAlert('Ошибка! Не заполенено поле "Email"');
+      return false;
+    }
+    if (userStore.passwordIsEmpty) {
+      showAlert('Ошибка! Не заполенено поле "Пароль"');
+      return false;
+    }
+    if (!userStore.emailIsValid) {
+      showAlert('Ошибка! Не корректно заполнено поле "Email"')
+      return false;
+    }
+    return true
+  }
+
+  async function signIn() {
+    if (!formIsValid()) return
+
+    try {
+      const res = await userStore.signIn()
+      document.cookie = `token=${res.data.token}`
+    } catch (e) {
+      if (e.response.data.message) {
+        showAlert(e.response.data.message)
+      } else {
+        showAlert('Произошла ошибка на сервере!')
+      }
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
