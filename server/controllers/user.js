@@ -108,3 +108,17 @@ export const sendConfirmationCode = async (req, res) => {
 
     res.status(200).json({ success: true });
 }
+
+export const getUserProfile = async (req, res) => {
+    const user = await User.findById(req.userId)
+
+    if (user) {
+        return res.status(200)
+            .json({
+                userName: user.userName,
+                email: user.email,
+            });
+    } else {
+        return res.status(404);
+    }
+}
