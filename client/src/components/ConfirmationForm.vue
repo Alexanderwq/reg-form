@@ -11,6 +11,7 @@
     </p>
     <FormInput
       :value="userStore.code"
+      :valid="codeIsValid"
       @setValue="userStore.setCode"
       name="code"
       label="Код подтверждения с Email"
@@ -37,15 +38,22 @@
   import FormButton from "@/common/FormButton.vue";
   import TimeWidget from "@/components/TimeWidget.vue";
   import {useAlertStore} from "@/stores/alertStore";
+  import {ref} from "vue";
 
   const userStore = useUserStore()
   const alertStore = useAlertStore()
 
+  const codeIsValid = ref(true);
+
   async function submitCode() {
     if (userStore.codeIsEmpty) {
       alertStore.showAlert('Ошибка! Поле с кодом не должно быть пустым!')
+      codeIsValid.value = false;
       return
     }
+
+    codeIsValid.value = true;
+
     try{
       const res = await userStore.signUp()
       document.cookie = `token=${res.data.token}`

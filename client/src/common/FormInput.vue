@@ -1,10 +1,11 @@
 <template>
-  <label :for="id" class="label">
+  <label :for="id" class="label" :class="{'label_invalid': !props.valid}">
     <input
         :value="value"
         :name="name"
         :id="id"
         @input="$emit('setValue', $event.target.value)"
+        @change="setValidClass"
         class="input"
         type="text"
         placeholder="&nbsp;"
@@ -17,7 +18,7 @@
   import defineProps, {onMounted, ref} from 'vue';
   import uniqueid from 'lodash.uniqueid';
 
-  defineProps({
+  const props = defineProps({
     value: {
       type: String,
       required: true,
@@ -28,6 +29,10 @@
     },
     name: {
       type: String,
+      required: true,
+    },
+    valid: {
+      type: Boolean,
       required: true,
     },
   });
@@ -46,6 +51,14 @@
 <style lang="scss" scoped>
   .label{
     position: relative;
+    &_invalid{
+      & .label-text{
+        color: #CB5E5E;
+      }
+      & .input{
+        border-color: #CB5E5E;
+      }
+    }
   }
   .label-text {
     position: absolute;
