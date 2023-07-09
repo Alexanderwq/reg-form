@@ -5,12 +5,14 @@
     </p>
     <FormInput
       :value="userStore.email"
+      :valid="fieldsValidStatus.email"
       @setValue="userStore.setEmail"
       name="email"
       label="Email"
     />
     <FormInput
         :value="userStore.password"
+        :valid="fieldsValidStatus.password"
         @setValue="userStore.setPassword"
         name="password"
         label="Пароль"
@@ -31,23 +33,37 @@
   import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
+  import {ref} from "vue";
 
   const userStore = useUserStore()
   const { showAlert } = useAlertStore()
 
+  const fieldsValidStatus = ref({
+    email: true,
+    password: true,
+  })
+
   function formIsValid() {
     if (userStore.emailIsEmpty) {
+      fieldsValidStatus.value.email = false;
       showAlert('Ошибка! Не заполенено поле "Email"');
       return false;
     }
     if (userStore.passwordIsEmpty) {
+      fieldsValidStatus.value.password = false;
       showAlert('Ошибка! Не заполенено поле "Пароль"');
       return false;
     }
     if (!userStore.emailIsValid) {
+      fieldsValidStatus.value.email = false;
       showAlert('Ошибка! Не корректно заполнено поле "Email"')
       return false;
     }
+
+    for (let key in fieldsValidStatus.value) {
+      fieldsValidStatus.value[key] = true;
+    }
+
     return true
   }
 

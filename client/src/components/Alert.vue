@@ -1,6 +1,6 @@
 <template>
-  <teleport to="body" v-if="alertStore.visibleAlert">
-    <div class="alert">
+  <teleport to="body">
+    <div class="alert" :class="{'alert-visible': alertStore.visibleAlert}">
       <img class="alert__icon" src="../assets/img/error-icon.png" alt="icon" />
       <p class="alert__text">
         {{ alertStore.text }}
@@ -37,6 +37,14 @@ const alertStore = useAlertStore();
     z-index: 100;
     bottom: 60px;
     right: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: .2s;
+
+    &-visible{
+      opacity: 1;
+      visibility: visible;
+    }
 
     &__text{
       color: #686868;
@@ -52,5 +60,16 @@ const alertStore = useAlertStore();
       top: 35px;
       right: 30px;
     }
+  }
+
+
+  .v-enter-active,
+  .v-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
   }
 </style>
