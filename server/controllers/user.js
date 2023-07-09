@@ -27,7 +27,6 @@ export const login = async (req, res) => {
 
         res.status(200).json({ user, token })
     } catch (e) {
-        console.log(e)
         res.status(500).json({ message: 'Произошла ошибка' })
     }
 }
@@ -69,7 +68,6 @@ export const registration = async (req, res) => {
 
         res.status(200).json({ user: createdUser, token })
     } catch (e) {
-        console.log(e)
         res.status(500).json({ message: 'Произошла ошибка' })
     }
 }
