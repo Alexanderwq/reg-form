@@ -2,7 +2,7 @@
   <div class="navigation">
     <NavigationLink
       :active="navStore.showLoginForm"
-      @click="toLoginForm"
+      @click="toRegForm"
     >
       <template v-slot:text>
         Вход
@@ -11,7 +11,7 @@
 
     <NavigationLink
         :active="navStore.showRegForm"
-        @click="toRegForm"
+        @click="toLoginForm"
     >
       <template v-slot:text>
         Зарегистрироваться
@@ -30,11 +30,13 @@
   const { resetUserData } = useUserStore()
 
   function toRegForm() {
+    if (navStore.showLoginForm) return
     resetUserData()
     navStore.setSection(NavigationSections.SIGN_IN)
   }
 
   function toLoginForm() {
+    if (navStore.showRegForm) return
     resetUserData()
     navStore.setSection(NavigationSections.SIGN_UP)
   }
