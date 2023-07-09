@@ -3,12 +3,13 @@
     <input
       :disabled="disabled"
       :value="value"
+      :class="{'input_active': !disabled}"
       @input="$emit('inputValue', $event.target.value)"
       class="input"
       type="text"
     />
     <img
-      @click="$emit('clickPencil')"
+      @click="$emit('enableInput')"
       class="pencil"
       src="../../assets/img/pencil.png"
       alt="pencil"
@@ -49,6 +50,7 @@
 
     &_active{
       border-color: #4786FF;
+      background: transparent;
     }
   }
 

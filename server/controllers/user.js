@@ -126,15 +126,19 @@ export const getUserProfile = async (req, res) => {
 export const updateUserProfile = async (req, res) => {
     const user = await User.findById(req.userId)
 
-    const { userName, email, password, confirmPassword} = req.body;
+    let { userName, email, password, confirmPassword} = req.body;
 
-    if (password !== confirmPassword) return res.status(500).json({})
+    userName = userName || user.userName
+    email = email || user.email
 
-    const hashedPassword = await bcrypt.hash(password, 12)
+    if (password || confirmPassword) {
+        if (password !== confirmPassword) return res.status(500).json({})
+
+        user.password = await bcrypt.hash(password, 12)
+    }
 
     user.userName = userName
     user.email = email
-    user.password = hashedPassword
 
     const updatedUser = await user.save();
 

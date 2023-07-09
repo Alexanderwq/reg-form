@@ -1,4 +1,5 @@
 import axios from "axios";
+import {getCookie} from "@/helpers/getCookie";
 
 export default {
     sendConfirmationCode(email) {
@@ -21,4 +22,19 @@ export default {
             password,
         });
     },
+
+    updateProfile(userName, email, password, confirmPassword) {
+        return axios.post('/update_user_profile', {
+            userName,
+            email,
+            password,
+            confirmPassword,
+        },
+        {
+                headers: {
+                    'authorization': getCookie('token'),
+                }
+            }
+        )
+    }
 }
