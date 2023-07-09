@@ -5,6 +5,7 @@
       class="user-widget__navigation"
     />
     <RegForm v-if="navStore.currentSection === NavigationSections.SIGN_UP" />
+    <LoginForm v-if="navStore.currentSection === NavigationSections.SIGN_IN" />
     <ConfirmationForm  v-if="navStore.currentSection === NavigationSections.CONFIRMATION" />
   </div>
 </template>
@@ -15,6 +16,7 @@
   import ConfirmationForm from "@/components/ConfirmationForm.vue";
   import RegForm from "@/components/RegForm.vue";
   import {useNavigationStore} from "@/stores/navigationStore";
+  import LoginForm from "@/components/LoginForm.vue";
 
   const navStore = useNavigationStore();
 </script>

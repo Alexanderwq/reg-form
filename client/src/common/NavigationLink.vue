@@ -22,8 +22,7 @@
   .navigation-link{
     color: #686868;
     font-size: 30px;
-    font-style: normal;
-    font-weight: 500;
+    font-weight: 700;
     line-height: normal;
     letter-spacing: 0.45px;
     border: none;

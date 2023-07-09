@@ -3,7 +3,7 @@ import NavigationSections from "@/const/NavigationSections";
 
 export const useNavigationStore = defineStore('navigation', {
     state: () => ({
-        currentSection: NavigationSections.SIGN_UP,
+        currentSection: NavigationSections.SIGN_IN,
     }),
 
     getters: {
