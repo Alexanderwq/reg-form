@@ -1,7 +1,7 @@
 <template>
   <div class="navigation">
     <NavigationLink
-      :active="showLoginForm"
+      :active="navStore.showLoginForm"
       @click="toLoginForm"
     >
       <template v-slot:text>
@@ -10,7 +10,7 @@
     </NavigationLink>
 
     <NavigationLink
-        :active="showRegForm"
+        :active="navStore.showRegForm"
         @click="toRegForm"
     >
       <template v-slot:text>
@@ -26,17 +26,17 @@
   import NavigationSections from "@/const/NavigationSections";
   import {useUserStore} from "@/stores/userStore";
 
-  const { setSection, showRegForm, showLoginForm } = useNavigationStore()
+  const navStore = useNavigationStore()
   const { resetUserData } = useUserStore()
 
   function toRegForm() {
     resetUserData()
-    setSection(NavigationSections.SIGN_IN)
+    navStore.setSection(NavigationSections.SIGN_IN)
   }
 
   function toLoginForm() {
     resetUserData()
-    setSection(NavigationSections.SIGN_UP)
+    navStore.setSection(NavigationSections.SIGN_UP)
   }
 </script>
 
