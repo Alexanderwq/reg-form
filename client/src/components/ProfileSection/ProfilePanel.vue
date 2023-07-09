@@ -5,7 +5,10 @@
         Сохранить
       </template>
     </FormButton>
-    <button class="profile-panel__reset">
+    <button
+      @click="profileStore.resetProfile"
+      class="profile-panel__reset"
+    >
       Отмена
     </button>
   </div>
@@ -15,13 +18,46 @@
   import FormButton from "@/common/FormButton.vue";
   import {useProfileStore} from "@/stores/useProfileStore";
   import {useAlertStore} from "@/stores/alertStore";
+  import {useUserStore} from "@/stores/userStore";
 
   const { showAlert } = useAlertStore()
+  const userStore = useUserStore()
   const profileStore = useProfileStore()
+
+  function validFields() {
+    if (!profileStore.userNameIsDisabled && userStore.userNameIsEmpty) {
+      showAlert('Ошибка! Поле с именем должно быть заполнено')
+      return false;
+    }
+    if (!profileStore.emailIsDisabled && userStore.emailIsEmpty) {
+      showAlert('Ошибка! Поле email должно быть заполнено')
+      return false;
+    }
+    if (!profileStore.passwordIsDisabled && userStore.passwordIsEmpty) {
+      showAlert('Ошибка! Поле пароль должно быть заполнено')
+      return false;
+    }
+    if (!profileStore.confirmPasswordIsDisabled && userStore.confirmPasswordIsEmpty) {
+      showAlert('Ошибка! Поле подтверждение пароля должно быть заполнено')
+      return false;
+    }
+
+    if ((!profileStore.confirmPasswordIsDisabled || !profileStore.passwordIsDisabled) && !userStore.passwordsMatch) {
+      showAlert('Ошибка! Пароли не совпадают')
+      return false;
+    }
+
+    return true;
+  }
 
   async function updateProfile() {
     try {
+      if (!validFields()) return
+
       await profileStore.updateProfile()
+      profileStore.disableFields()
+      userStore.setPassword('')
+      userStore.setConfirmPassword('')
       showAlert('Пользователь обновлен')
     } catch (e) {
       if (e.response.data.message) {

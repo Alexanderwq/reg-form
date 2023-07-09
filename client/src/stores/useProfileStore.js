@@ -24,6 +24,13 @@ export const useProfileStore = defineStore('profile', {
             this.confirmPasswordIsDisabled = value;
         },
 
+        disableFields() {
+            this.setUserNameIsDisabled(true)
+            this.setEmailIsDisabled(true)
+            this.setPasswordIsDisabled(true)
+            this.setConfirmPasswordIsDisabled(true)
+        },
+
         updateProfile() {
             const userStore = useUserStore()
 
@@ -34,5 +41,20 @@ export const useProfileStore = defineStore('profile', {
                 userStore.confirmPassword
             )
         },
+
+        async getProfile() {
+            const userStore = useUserStore()
+            const res = await api.getProfile()
+            userStore.setEmail(res.data.email)
+            userStore.setUserName(res.data.userName)
+        },
+
+        async resetProfile() {
+            const userStore = useUserStore()
+
+            this.disableFields()
+            userStore.resetUserData()
+            await this.getProfile()
+        }
     },
 })
