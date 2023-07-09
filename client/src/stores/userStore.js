@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-// import api from "@/api/auth/api";
+import api from "@/api/auth/api";
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -23,16 +23,16 @@ export const useUserStore = defineStore('user', {
         setConfirmPassword(value) {
             this.confirmPassword = value;
         },
-        setCode(value) {
-            this.code = value;
-        },
-        // async sendConfirmationCode() {
-        //     try {
-        //         await api.sendConfirmationCode(this.email);
-        //     } catch (e) {
-        //
-        //     }
+        // setCode(value) {
+        //     this.code = value;
         // },
+        async sendConfirmationCode() {
+            try {
+                await api.sendConfirmationCode(this.email)
+            } catch (e) {
+                console.log(e)
+            }
+        },
         //
         // async signUp() {
         //     try {

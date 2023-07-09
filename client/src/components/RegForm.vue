@@ -1,5 +1,5 @@
 <template>
-  <div class="login-form">
+  <div class="reg-form">
     <FormInput
       :value="userStore.userName"
       name="name"
@@ -24,21 +24,35 @@
       @setValue="userStore.setConfirmPassword"
       label="Подтверждение пароля"
     />
+    <FormButton
+      class="reg-form__button"
+      @click="userStore.sendConfirmationCode"
+    >
+      <template v-slot:text>
+        Зарегистрироваться
+      </template>
+    </FormButton>
   </div>
 </template>
 
 <script setup>
   import FormInput from "@/common/FormInput.vue";
   import {useUserStore} from "@/stores/userStore";
+  import FormButton from "@/common/FormButton.vue";
 
   const userStore = useUserStore();
 </script>
 
 <style lang="scss" scoped>
-  .login-form{
+  .reg-form{
     display: flex;
     flex-direction: column;
     gap: 40px;
-    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+
+    &__button{
+      margin-top: 20px;
+    }
   }
 </style>

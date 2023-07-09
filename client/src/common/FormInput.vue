@@ -70,6 +70,8 @@
     line-height: normal;
     padding: 25px 30px;
     outline: none;
+    width: 100%;
+    box-sizing: border-box;
     &:not(:placeholder-shown) + .label-text {
       transform: translateY(-70px)
     }
