@@ -14,10 +14,10 @@ export const login = async (req, res) => {
         if (!email || !password) return res.status(500).json({})
 
         const user = await User.findOne({ email })
-        if (!user) res.status(404).json({ message: 'Пользователь не найден' })
+        if (!user) return res.status(404).json({ message: 'Пользователь не найден' })
 
         const isCorrectPassword = await bcrypt.compare(password, user.password)
-        if (!isCorrectPassword) res.status(400).json({ message: 'Неправильный пароль' })
+        if (!isCorrectPassword) return res.status(400).json({ message: 'Неправильный пароль' })
 
         const token = jwt.sign(
             {id: user._id, email: user.email },
@@ -25,9 +25,9 @@ export const login = async (req, res) => {
             { expiresIn: '30m'}
         )
 
-        res.status(200).json({ user, token })
+        return res.status(200).json({ user, token })
     } catch (e) {
-        res.status(500).json({ message: 'Произошла ошибка' })
+        return res.status(500).json({ message: 'Произошла ошибка' })
     }
 }
 
