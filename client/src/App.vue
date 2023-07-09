@@ -2,6 +2,7 @@
   <div class="container">
     <Alert />
     <div class="wrapper">
+      <Navigation />
       <RegForm v-if="navStore.currentSection === NavigationSections.SIGN_UP" />
       <ConfirmationForm  v-if="navStore.currentSection === NavigationSections.CONFIRMATION" />
     </div>
@@ -14,6 +15,7 @@
   import ConfirmationForm from "@/components/ConfirmationForm.vue";
   import {useNavigationStore} from "@/stores/navigationStore";
   import NavigationSections from "@/const/NavigationSections";
+  import Navigation from "@/components/Navigation.vue";
 
   const navStore = useNavigationStore();
 </script>
