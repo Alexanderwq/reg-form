@@ -8,7 +8,7 @@ export const useNavigationStore = defineStore('navigation', {
 
     getters: {
         showNavigation() {
-            return !this.showConfirmation
+            return !this.showConfirmation && !this.showProfile
         },
         showRegForm() {
             return this.currentSection === NavigationSections.SIGN_UP
