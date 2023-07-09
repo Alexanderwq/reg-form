@@ -19,6 +19,9 @@ export const useNavigationStore = defineStore('navigation', {
         showConfirmation() {
             return this.currentSection === NavigationSections.CONFIRMATION
         },
+        showProfile() {
+            return this.currentSection === NavigationSections.PROFILE
+        },
     },
 
     actions: {
