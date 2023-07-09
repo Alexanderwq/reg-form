@@ -16,7 +16,10 @@
       label="Код подтверждения с Email"
       class="confirm-form__input"
     />
-    <FormButton class="confirm-form__button">
+    <FormButton
+      @click="submitCode"
+      class="confirm-form__button"
+    >
       <template v-slot:text>
         Отправить
       </template>
@@ -33,8 +36,27 @@
   import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
   import TimeWidget from "@/components/TimeWidget.vue";
+  import {useAlertStore} from "@/stores/alertStore";
 
-  const userStore = useUserStore();
+  const userStore = useUserStore()
+  const alertStore = useAlertStore()
+
+  async function submitCode() {
+    if (userStore.codeIsEmpty) {
+      alertStore.showAlert('Ошибка! Поле с кодом не должно быть пустым!')
+      return
+    }
+    try{
+      const res = await userStore.signUp()
+      document.cookie = `token=${res.data.token}`
+    } catch (e) {
+      if (e.response.data.message) {
+        alertStore.showAlert(e.response.data.message)
+      } else {
+        alertStore.showAlert('Произошла ошибка на сервере!')
+      }
+    }
+  }
 </script>
 
 <style lang="scss" scoped>

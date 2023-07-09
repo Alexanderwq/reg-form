@@ -40,9 +40,12 @@
   import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
+  import {useNavigationStore} from "@/stores/navigationStore";
+  import NavigationSections from "@/const/NavigationSections";
 
-  const userStore = useUserStore();
-  const { showAlert } = useAlertStore();
+  const userStore = useUserStore()
+  const { showAlert } = useAlertStore()
+  const { setSection } = useNavigationStore()
 
   function formIsValid() {
     if (userStore.userNameIsEmpty) {
@@ -75,6 +78,7 @@
   function submitCode(email) {
     if (!formIsValid()) return
     userStore.sendConfirmationCode(email)
+    setSection(NavigationSections.CONFIRMATION)
   }
 </script>
 
