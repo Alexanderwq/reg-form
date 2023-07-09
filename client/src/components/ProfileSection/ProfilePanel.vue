@@ -74,8 +74,9 @@
     display: flex;
     gap: 50px;
     justify-content: center;
-    align-items: center;
     grid-column: 1/3;
+    align-items: end;
+    height: 140px;
 
     &__reset {
       border-radius: 8px;

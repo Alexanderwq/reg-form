@@ -10,6 +10,15 @@ export const useProfileStore = defineStore('profile', {
         confirmPasswordIsDisabled: true,
     }),
 
+    getters: {
+        showOptionsPanel() {
+            return !this.emailIsDisabled ||
+                !this.userNameIsDisabled ||
+                !this.passwordIsDisabled ||
+                !this.confirmPasswordIsDisabled
+        },
+    },
+
     actions: {
         setEmailIsDisabled(value) {
             this.emailIsDisabled = value;
