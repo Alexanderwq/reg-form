@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Alert />
     <div class="wrapper">
       <RegForm />
     </div>
@@ -8,13 +9,14 @@
 
 <script setup>
   import RegForm from "@/components/RegForm.vue";
+  import Alert from "@/components/Alert.vue";
 </script>
 
 <style src="./assets/css/reset.css"></style>
 
 <style lang="scss" scoped>
 .container{
-  background: url("./assets/background.png") center center no-repeat;
+  background: url("./assets/img/background.png") center center no-repeat;
   background-size: cover;
   filter: drop-shadow(0px 10px 25px rgba(92, 99, 105, 0.20));
   position: absolute;

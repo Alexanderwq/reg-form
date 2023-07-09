@@ -1,16 +1,24 @@
 <template>
-  <teleport to="body">
+  <teleport to="body" v-if="alertStore.visibleAlert">
     <div class="alert">
       <img class="alert__icon" src="../assets/img/error-icon.png" alt="icon" />
       <p class="alert__text">
-        <slot name="text"></slot>
+        {{ alertStore.text }}
       </p>
-      <img class="alert__close" src="../assets/img/close.png" alt="close" />
+      <img
+        @click="alertStore.setVisibleAlert(false)"
+        class="alert__close"
+        src="../assets/img/close.png"
+        alt="close"
+      />
     </div>
   </teleport>
 </template>
 
 <script setup>
+import {useAlertStore} from "@/stores/alertStore";
+
+const alertStore = useAlertStore();
 </script>
 
 <style lang="scss" scoped>

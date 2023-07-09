@@ -10,6 +10,28 @@ export const useUserStore = defineStore('user', {
         code: '',
     }),
 
+    getters: {
+        userNameIsEmpty(){
+            return this.userName.length === 0
+        },
+        emailIsEmpty() {
+            return this.email.length === 0
+        },
+        passwordIsEmpty() {
+            return this.password.length === 0
+        },
+        confirmPasswordIsEmpty() {
+            return this.confirmPassword.length === 0
+        },
+        emailIsValid() {
+            const regExp = new RegExp('[a-z0-9]+@[a-z]+\\.[a-z]{2,3}');
+            return regExp.test(this.email)
+        },
+        passwordsMatch() {
+            return this.password === this.confirmPassword
+        },
+    },
+
     actions: {
         setUserName(value) {
             this.userName = value;

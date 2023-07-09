@@ -26,7 +26,7 @@
     />
     <FormButton
       class="reg-form__button"
-      @click="userStore.sendConfirmationCode"
+      @click="submitCode"
     >
       <template v-slot:text>
         Зарегистрироваться
@@ -39,8 +39,43 @@
   import FormInput from "@/common/FormInput.vue";
   import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
+  import {useAlertStore} from "@/stores/alertStore";
 
   const userStore = useUserStore();
+  const { showAlert } = useAlertStore();
+
+  function formIsValid() {
+    if (userStore.userNameIsEmpty) {
+      showAlert('Ошибка! Не заполенено поле "Имя"');
+      return false;
+    }
+    if (userStore.emailIsEmpty) {
+      showAlert('Ошибка! Не заполенено поле "Email"');
+      return false;
+    }
+    if (userStore.passwordIsEmpty) {
+      showAlert('Ошибка! Не заполенено поле "Пароль"');
+      return false;
+    }
+    if (userStore.confirmPasswordIsEmpty) {
+      showAlert('Ошибка! Не заполенено поле "Подтверждение пароля"');
+      return false;
+    }
+    if (!userStore.emailIsValid) {
+      showAlert('Ошибка! Не корректно заполнено поле Email')
+      return false;
+    }
+    if (!userStore.passwordsMatch) {
+      showAlert('Ошибка! Пароли не совпадают')
+      return false;
+    }
+    return true;
+  }
+
+  function submitCode(email) {
+    if (!formIsValid()) return
+    userStore.sendConfirmationCode(email)
+  }
 </script>
 
 <style lang="scss" scoped>
