@@ -2,17 +2,17 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
 dotenv.config()
-const SECRET = process.env.SECRET;
+const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
 const auth = async (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1]
+    const token = req.headers.authorization
 
     let decodeData;
 
     if(!token) res.status(401).json({ error: 'Нет токена' })
 
     try {
-        decodeData = jwt.verify(token, SECRET)
+        decodeData = jwt.verify(token, TOKEN_SECRET)
         req.userId = decodeData?.id
 
         next()
