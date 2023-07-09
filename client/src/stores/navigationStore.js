@@ -6,6 +6,13 @@ export const useNavigationStore = defineStore('navigation', {
         currentSection: NavigationSections.SIGN_UP,
     }),
 
+    getters: {
+        showNavigation() {
+            return NavigationSections.CONFIRMATION !== this.currentSection &&
+                NavigationSections.PROFILE !== this.currentSection
+        },
+    },
+
     actions: {
         setSection(value) {
             this.currentSection = value
