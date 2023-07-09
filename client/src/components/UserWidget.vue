@@ -4,14 +4,13 @@
       v-if="navStore.showNavigation"
       class="user-widget__navigation"
     />
-    <RegForm v-if="navStore.currentSection === NavigationSections.SIGN_UP" />
-    <LoginForm v-if="navStore.currentSection === NavigationSections.SIGN_IN" />
-    <ConfirmationForm  v-if="navStore.currentSection === NavigationSections.CONFIRMATION" />
+    <RegForm v-if="navStore.showRegForm" />
+    <LoginForm v-if="navStore.showLoginForm" />
+    <ConfirmationForm  v-if="navStore.showConfirmation" />
   </div>
 </template>
 
 <script setup>
-  import NavigationSections from "@/const/NavigationSections";
   import Navigation from "@/components/Navigation.vue";
   import ConfirmationForm from "@/components/ConfirmationForm.vue";
   import RegForm from "@/components/RegForm.vue";

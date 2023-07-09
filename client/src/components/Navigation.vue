@@ -1,7 +1,8 @@
 <template>
   <div class="navigation">
     <NavigationLink
-      :active="false"
+      :active="navStore.showLoginForm"
+      @click="navStore.setSection(NavigationSections.SIGN_IN)"
     >
       <template v-slot:text>
         Вход
@@ -9,7 +10,8 @@
     </NavigationLink>
 
     <NavigationLink
-        :active="true"
+        :active="navStore.showRegForm"
+        @click="navStore.setSection(NavigationSections.SIGN_UP)"
     >
       <template v-slot:text>
         Зарегистрироваться
@@ -20,6 +22,10 @@
 
 <script setup>
   import NavigationLink from "@/common/NavigationLink.vue";
+  import {useNavigationStore} from "@/stores/navigationStore";
+  import NavigationSections from "@/const/NavigationSections";
+
+  const navStore = useNavigationStore()
 </script>
 
 <style lang="scss" scoped>
