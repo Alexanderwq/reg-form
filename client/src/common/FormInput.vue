@@ -69,6 +69,7 @@
     font-weight: 400;
     line-height: normal;
     padding: 25px 30px;
+    outline: none;
     &:not(:placeholder-shown) + .label-text {
       transform: translateY(-70px)
     }
