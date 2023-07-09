@@ -14,4 +14,11 @@ export default {
             confirmCode: code
         });
     },
+
+    signIn(email, password) {
+        return axios.post('/login', {
+            email,
+            password,
+        });
+    },
 }

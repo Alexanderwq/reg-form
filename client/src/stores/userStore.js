@@ -55,6 +55,14 @@ export const useUserStore = defineStore('user', {
             return api.sendConfirmationCode(this.email)
         },
 
+        resetUserData() {
+            this.setUserName('')
+            this.setEmail('')
+            this.setPassword('')
+            this.setConfirmPassword('')
+            this.setCode('')
+        },
+
         signUp() {
             return api.signUp(
                 this.userName,
@@ -63,6 +71,10 @@ export const useUserStore = defineStore('user', {
                 this.confirmPassword,
                 this.code
             );
+        },
+
+        signIn() {
+            return api.signIn(this.email, this.password)
         },
     },
 })
