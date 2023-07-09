@@ -10,14 +10,15 @@
   import RegForm from "@/components/RegForm.vue";
 </script>
 
+<style src="./assets/css/reset.css"></style>
+
 <style lang="scss" scoped>
 .container{
   background: url("./assets/background.png") center center no-repeat;
   background-size: cover;
   filter: drop-shadow(0px 10px 25px rgba(92, 99, 105, 0.20));
-  position: fixed;
+  position: absolute;
   width: 100%;
-  height: 100%;
 }
 
 .wrapper{
@@ -26,6 +27,6 @@
   background: #FFF;
   filter: drop-shadow(0px 10px 25px rgba(92, 99, 105, 0.20));
   border-radius: 10px;
-  margin: 100px auto 0;
+  margin: 100px auto 100px;
 }
 </style>
