@@ -122,3 +122,21 @@ export const getUserProfile = async (req, res) => {
         return res.status(404);
     }
 }
+
+export const updateUserProfile = async (req, res) => {
+    const user = await User.findById(req.userId)
+
+    const { userName, email, password, confirmPassword} = req.body;
+
+    if (password !== confirmPassword) return res.status(500).json({})
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    user.userName = userName
+    user.email = email
+    user.password = hashedPassword
+
+    const updatedUser = await user.save();
+
+    return res.status(200).json({ user: updatedUser })
+}
