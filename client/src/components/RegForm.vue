@@ -59,6 +59,12 @@
     confirmPassword: true,
   })
 
+  function resetFields() {
+    for (let key in fieldsValidStatus.value) {
+      fieldsValidStatus.value[key] = true;
+    }
+  }
+
   function formIsValid() {
     if (userStore.userNameIsEmpty) {
       showAlert('Ошибка! Не заполенено поле "Имя"');
@@ -92,9 +98,7 @@
       return false;
     }
 
-    for (let key in fieldsValidStatus.value) {
-      fieldsValidStatus.value[key] = true;
-    }
+    resetFields()
 
     return true;
   }
