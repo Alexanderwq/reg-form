@@ -19,5 +19,6 @@
   filter: drop-shadow(0px 10px 25px rgba(92, 99, 105, 0.20));
   position: absolute;
   width: 100%;
+  min-height: 100%;
 }
 </style>
