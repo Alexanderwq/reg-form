@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-    res.sendFile(__dirname + '/../../client/dist/index.html')
+    return res.sendFile(__dirname + '/../../client/dist/index.html')
 })
 router.get('/get_auth_status', auth, getAuthStatus)
 router.post('/registration', registration)

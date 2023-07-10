@@ -9,15 +9,15 @@ const auth = async (req, res, next) => {
 
     let decodeData;
 
-    if(!token) res.status(401).json({ error: 'Нет токена' })
+    if(!token) return res.status(401).json({ error: 'Нет токена' })
 
     try {
         decodeData = jwt.verify(token, TOKEN_SECRET)
         req.userId = decodeData?.id
 
-        next()
+        return next()
     } catch (e) {
-        res.status(403).json({ error: 'Доступ запрещен' })
+        return res.status(403).json({ error: 'Доступ запрещен' })
     }
 }
 
