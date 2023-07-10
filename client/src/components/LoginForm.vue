@@ -79,6 +79,7 @@
       document.cookie = `token=${res.data.token}`
       navStore.setSection(navStore.profileSection)
       profileStore.getProfile()
+      userStore.setPassword('')
     } catch (e) {
       if (e.response.data.message) {
         showAlert(e.response.data.message)
