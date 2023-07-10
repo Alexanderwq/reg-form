@@ -36,10 +36,12 @@
   import {ref} from "vue";
   import {useNavigationStore} from "@/stores/navigationStore";
   import NavigationSections from "@/const/NavigationSections";
+  import {useProfileStore} from "@/stores/useProfileStore";
 
   const userStore = useUserStore()
   const { showAlert } = useAlertStore()
   const navStore = useNavigationStore()
+  const profileStore = useProfileStore()
 
   const fieldsValidStatus = ref({
     email: true,
@@ -77,6 +79,7 @@
       const res = await userStore.signIn()
       document.cookie = `token=${res.data.token}`
       navStore.setSection(NavigationSections.PROFILE)
+      profileStore.getProfile()
     } catch (e) {
       if (e.response.data.message) {
         showAlert(e.response.data.message)
