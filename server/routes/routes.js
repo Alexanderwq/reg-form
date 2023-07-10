@@ -1,9 +1,17 @@
 import express from 'express'
-import {getUserProfile, login, registration, sendConfirmationCode, updateUserProfile} from '../controllers/user.js'
+import {
+    getAuthStatus,
+    getUserProfile,
+    login,
+    registration,
+    sendConfirmationCode,
+    updateUserProfile
+} from '../controllers/user.js'
 import auth from "../middleware/auth.js";
 
 const router = express.Router()
 
+router.get('/get_auth_status', auth, getAuthStatus)
 router.post('/registration', registration)
 router.post('/login', login)
 router.post('/send_code', sendConfirmationCode)

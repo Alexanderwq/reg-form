@@ -7,6 +7,10 @@ import EmailCodes from "../models/EmailCodesModel.js";
 dotenv.config()
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
+export const getAuthStatus = async (req, res) => {
+    return res.status(200).json({ authorization: true })
+}
+
 export const login = async (req, res) => {
     const { email, password } = req.body
 

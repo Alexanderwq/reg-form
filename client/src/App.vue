@@ -1,13 +1,33 @@
 <template>
   <div class="container">
     <Alert />
-    <UserWidget />
+    <UserWidget v-if="!loading" />
   </div>
 </template>
 
 <script setup>
   import Alert from "@/components/Alert.vue";
   import UserWidget from "@/components/UserWidget.vue";
+  import {useUserStore} from "@/stores/userStore";
+  import NavigationSections from "@/const/NavigationSections";
+  import {useNavigationStore} from "@/stores/navigationStore";
+  import {onMounted, ref} from "vue";
+  import {useProfileStore} from "@/stores/useProfileStore";
+
+  const navStore = useNavigationStore()
+  const userStore = useUserStore()
+  const profileStore = useProfileStore()
+
+  const loading = ref(true);
+
+  onMounted( async () => {
+    await userStore.setAuthStatus()
+    if (userStore.authStatus) {
+      navStore.setSection(NavigationSections.PROFILE)
+      profileStore.getProfile()
+    }
+    loading.value = false
+  })
 </script>
 
 <style src="./assets/css/reset.css"></style>

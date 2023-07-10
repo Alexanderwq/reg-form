@@ -44,5 +44,13 @@ export default {
                 'authorization': getCookie('token'),
             }
         })
+    },
+
+    getAuthStatus() {
+        return axios.get('/get_auth_status', {
+            headers: {
+                'authorization': getCookie('token'),
+            }
+        })
     }
 }
