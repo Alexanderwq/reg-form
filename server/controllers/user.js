@@ -108,7 +108,7 @@ export const sendConfirmationCode = async (req, res) => {
         endTime,
     })
 
-    console.log(randomNumber);
+    console.log( 'CODE: ' + randomNumber);
 
     res.status(200).json({ success: true });
 }
