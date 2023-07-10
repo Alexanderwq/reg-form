@@ -5,9 +5,10 @@ import {
     login,
     registration,
     sendConfirmationCode,
-    updateUserProfile
+    updateUserProfile, uploadProfilePhoto
 } from '../controllers/user.js'
 import auth from "../middleware/auth.js";
+import fileUpload from 'express-fileupload'
 
 const router = express.Router()
 
@@ -17,5 +18,6 @@ router.post('/login', login)
 router.post('/send_code', sendConfirmationCode)
 router.get('/get_user_profile', auth, getUserProfile)
 router.post('/update_user_profile', auth, updateUserProfile)
+router.post('/upload_profile_photo', fileUpload({}), auth, uploadProfilePhoto)
 
 export default router

@@ -3,7 +3,11 @@ import dotenv from 'dotenv'
 import User from "../models/UserModel.js"
 import jwt from 'jsonwebtoken'
 import EmailCodes from "../models/EmailCodesModel.js";
+import path from 'path';
+import url from 'url';
 
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config()
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
@@ -147,4 +151,23 @@ export const updateUserProfile = async (req, res) => {
     const updatedUser = await user.save();
 
     return res.status(200).json({ user: updatedUser })
+}
+
+export const uploadProfilePhoto = async (req, res) => {
+    const URL_IMG = __dirname + '/../uploads/photos'
+    const ext = req.files.file.name
+        .split('.')
+        .filter(Boolean) // removes empty extensions (e.g. `filename...txt`)
+        .slice(1)
+        .join('.')
+
+    const hashedName = (Math.random() + 1).toString(36).substring(7);
+
+    if (ext !== 'png' && ext !== 'jpg') return res.status(500).json({})
+
+    await req.files.file.mv( URL_IMG + '/' + hashedName + '.' + ext)
+    res.end(req.files.file.name)
+
+    return res.status(200).json({})
+
 }

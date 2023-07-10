@@ -1,14 +1,20 @@
 <template>
-  <div class="photo-block">
+  <label class="photo-block">
     <img class="photo-block__img" src="../../assets/img/default-photo.png" alt="photo" />
     <p class="photo-block__name">
       Имя
     </p>
-  </div>
+    <input @change="uploadPhoto" type="file" hidden />
+  </label>
 </template>
 
 <script setup>
+  import api from "@/api/profile/api";
 
+  function uploadPhoto(e) {
+    const file = e.target.files[0]
+    api.uploadProfilePhoto(file)
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -27,6 +33,12 @@
       width: 100%;
       overflow: hidden;
       border-radius: 50%;
+      cursor: pointer;
+      transition: .2s ease-in-out;
+
+      &:hover{
+
+      }
     }
 
     &__name{
