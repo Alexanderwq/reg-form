@@ -29,6 +29,7 @@ export const updateUserProfile = async (req, res) => {
 }
 
 export const uploadProfilePhoto = async (req, res) => {
+    const user = await User.findById(req.userId)
     const URL_IMG = __dirname + '/../uploads/photos'
     const ext = req.files.file.name
         .split('.')
@@ -42,6 +43,9 @@ export const uploadProfilePhoto = async (req, res) => {
 
     await req.files.file.mv(URL_IMG + '/' + hashedName)
 
+    user.img = hashedName
+    await user.save()
+
     return res.status(200).json({ img: hashedName })
 }
 
@@ -53,6 +57,7 @@ export const getUserProfile = async (req, res) => {
             .json({
                 userName: user.userName,
                 email: user.email,
+                img: user.img
             });
     } else {
         return res.status(404);
