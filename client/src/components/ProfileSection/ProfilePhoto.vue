@@ -15,14 +15,14 @@
   import {useAlertStore} from "@/stores/alertStore";
   import {useUserStore} from "@/stores/userStore";
   const URL_IMG = '/photos'
-  const DEFAULT_IMG = '/img/default-photo.png'
+  const DEFAULT_SRC = '/img/default-photo.png'
 
   const profileStore = useProfileStore()
   const userStore = useUserStore()
   const alertStore = useAlertStore()
 
   const imgSrc = computed(() => {
-    return profileStore.imgName.length === 0 ? DEFAULT_IMG : URL_IMG + '/' + profileStore.imgName
+    return profileStore.imgName.length === 0 ? DEFAULT_SRC : URL_IMG + '/' + profileStore.imgName
   })
 
   async function uploadPhoto(e) {
