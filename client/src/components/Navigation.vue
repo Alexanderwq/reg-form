@@ -1,7 +1,7 @@
 <template>
   <div class="navigation">
     <NavigationLink
-      :active="navStore.showLoginForm"
+      :active="navStore.loginSectionIsActive"
       @click="toRegForm"
     >
       <template v-slot:text>
@@ -10,7 +10,7 @@
     </NavigationLink>
 
     <NavigationLink
-        :active="navStore.showRegForm"
+        :active="navStore.regSectionIsActive"
         @click="toLoginForm"
     >
       <template v-slot:text>
@@ -23,22 +23,19 @@
 <script setup>
   import NavigationLink from "@/common/NavigationLink.vue";
   import {useNavigationStore} from "@/stores/navigationStore";
-  import NavigationSections from "@/const/NavigationSections";
   import {useUserStore} from "@/stores/userStore";
 
   const navStore = useNavigationStore()
   const { resetUserData } = useUserStore()
 
   function toRegForm() {
-    if (navStore.showLoginForm) return
     resetUserData()
-    navStore.setSection(NavigationSections.SIGN_IN)
+    navStore.setSection(navStore.loginForm)
   }
 
   function toLoginForm() {
-    if (navStore.showRegForm) return
     resetUserData()
-    navStore.setSection(NavigationSections.SIGN_UP)
+    navStore.setSection(navStore.regForm)
   }
 </script>
 

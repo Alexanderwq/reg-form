@@ -4,20 +4,13 @@
       v-if="navStore.showNavigation"
       class="user-widget__navigation"
     />
-    <RegForm v-if="navStore.showRegForm" />
-    <LoginForm v-if="navStore.showLoginForm" />
-    <ConfirmationForm v-if="navStore.showConfirmation" />
-    <ProfileSection v-if="navStore.showProfile" />
+    <component :is="navStore.currentSection.component"></component>
   </div>
 </template>
 
 <script setup>
   import Navigation from "@/components/Navigation.vue";
-  import ConfirmationForm from "@/components/ConfirmationForm.vue";
-  import RegForm from "@/components/RegForm.vue";
   import {useNavigationStore} from "@/stores/navigationStore";
-  import LoginForm from "@/components/LoginForm.vue";
-  import ProfileSection from "@/components/ProfileSection/ProfileSection.vue";
 
   const navStore = useNavigationStore();
 </script>

@@ -45,12 +45,11 @@
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
   import {useNavigationStore} from "@/stores/navigationStore";
-  import NavigationSections from "@/const/NavigationSections";
   import {ref} from "vue";
 
   const userStore = useUserStore()
   const { showAlert } = useAlertStore()
-  const { setSection } = useNavigationStore()
+  const {confirmationSection, setSection } = useNavigationStore()
 
   const fieldsValidStatus = ref({
     userName: true,
@@ -113,7 +112,7 @@
       }
     }
 
-    setSection(NavigationSections.CONFIRMATION)
+    setSection(confirmationSection)
   }
 </script>
 

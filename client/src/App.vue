@@ -9,9 +9,8 @@
   import Alert from "@/components/Alert.vue";
   import UserWidget from "@/components/UserWidget.vue";
   import {useUserStore} from "@/stores/userStore";
-  import NavigationSections from "@/const/NavigationSections";
   import {useNavigationStore} from "@/stores/navigationStore";
-  import {onMounted, ref} from "vue";
+  import {onMounted, ref, shallowRef} from "vue";
   import {useProfileStore} from "@/stores/useProfileStore";
 
   const navStore = useNavigationStore()
@@ -22,8 +21,9 @@
 
   onMounted( async () => {
     await userStore.setAuthStatus()
+    navStore.setSection(shallowRef(navStore.regForm))
     if (userStore.authStatus) {
-      navStore.setSection(NavigationSections.PROFILE)
+      navStore.setSection(navStore.profileSection)
       profileStore.getProfile()
     }
     loading.value = false

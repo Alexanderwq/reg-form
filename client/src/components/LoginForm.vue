@@ -35,7 +35,6 @@
   import {useAlertStore} from "@/stores/alertStore";
   import {ref} from "vue";
   import {useNavigationStore} from "@/stores/navigationStore";
-  import NavigationSections from "@/const/NavigationSections";
   import {useProfileStore} from "@/stores/useProfileStore";
 
   const userStore = useUserStore()
@@ -78,7 +77,7 @@
     try {
       const res = await userStore.signIn()
       document.cookie = `token=${res.data.token}`
-      navStore.setSection(NavigationSections.PROFILE)
+      navStore.setSection(navStore.profileSection)
       profileStore.getProfile()
     } catch (e) {
       if (e.response.data.message) {

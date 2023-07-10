@@ -39,7 +39,6 @@
   import TimeWidget from "@/components/TimeWidget.vue";
   import {useAlertStore} from "@/stores/alertStore";
   import {ref} from "vue";
-  import NavigationSections from "@/const/NavigationSections";
   import {useNavigationStore} from "@/stores/navigationStore";
 
   const userStore = useUserStore()
@@ -60,7 +59,7 @@
     try{
       const res = await userStore.signUp()
       document.cookie = `token=${res.data.token}`
-      navStore.setSection(NavigationSections.PROFILE)
+      navStore.setSection(navStore.profileSection)
     } catch (e) {
       if (e.response.data.message) {
         alertStore.showAlert(e.response.data.message)
