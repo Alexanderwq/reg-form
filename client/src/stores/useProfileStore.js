@@ -8,6 +8,7 @@ export const useProfileStore = defineStore('profile', {
         userNameIsDisabled: true,
         passwordIsDisabled: true,
         confirmPasswordIsDisabled: true,
+        imgName: '',
     }),
 
     getters: {
@@ -31,6 +32,9 @@ export const useProfileStore = defineStore('profile', {
         },
         setConfirmPasswordIsDisabled(value) {
             this.confirmPasswordIsDisabled = value;
+        },
+        setImg(value) {
+            this.imgName = value;
         },
 
         disableFields() {
@@ -56,6 +60,7 @@ export const useProfileStore = defineStore('profile', {
             const res = await api.getProfile()
             userStore.setEmail(res.data.email)
             userStore.setUserName(res.data.userName)
+            this.imgName = res.data.img
         },
 
         async resetProfile() {

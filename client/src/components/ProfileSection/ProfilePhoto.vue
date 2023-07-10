@@ -1,8 +1,8 @@
 <template>
   <label class="photo-block">
-    <img class="photo-block__img" src="../../assets/img/default-photo.png" alt="photo" />
+    <img class="photo-block__img" :src="imgSrc" alt="photo" />
     <p class="photo-block__name">
-      Имя
+      {{ userStore.userName }}
     </p>
     <input @change="uploadPhoto" type="file" hidden />
   </label>
@@ -10,10 +10,36 @@
 
 <script setup>
   import api from "@/api/profile/api";
+  import {computed} from "vue";
+  import {useProfileStore} from "@/stores/useProfileStore";
+  import {useAlertStore} from "@/stores/alertStore";
+  import {useUserStore} from "@/stores/userStore";
+  const URL_IMG = '/photos'
+  const DEFAULT_IMG = '/img/default-photo.png'
 
-  function uploadPhoto(e) {
-    const file = e.target.files[0]
-    api.uploadProfilePhoto(file)
+  const profileStore = useProfileStore()
+  const userStore = useUserStore()
+  const alertStore = useAlertStore()
+
+  const imgSrc = computed(() => {
+    return profileStore.imgName.length === 0 ? DEFAULT_IMG : URL_IMG + '/' + profileStore.imgName
+  })
+
+  async function uploadPhoto(e) {
+    try {
+      const file = e.target.files[0]
+      const ext = file.name
+          .split('.')
+          .filter(Boolean) // removes empty extensions (e.g. `filename...txt`)
+          .slice(1)
+          .join('.')
+
+      if (ext !== 'png' && ext !== 'jpg') return alertStore.showAlert('Формат изображения должен быть PNG или JPG')
+      const res = await api.uploadProfilePhoto(file)
+      profileStore.setImg(res.data.img)
+    } catch (e) {
+      console.log(e)
+    }
   }
 </script>
 
