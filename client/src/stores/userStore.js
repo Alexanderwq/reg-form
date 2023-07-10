@@ -3,6 +3,7 @@ import api from "@/api/auth/api";
 
 export const useUserStore = defineStore('user', {
     state: () => ({
+        authStatus: false,
         userName: '',
         password: '',
         email: '',
@@ -75,6 +76,19 @@ export const useUserStore = defineStore('user', {
 
         signIn() {
             return api.signIn(this.email, this.password)
+        },
+
+        async setAuthStatus() {
+            try {
+                const res = await api.getAuthStatus()
+                this.authStatus = res.data.authorization
+            } catch (e) {
+                if (e.response?.status === 401) {
+                    this.authStatus = false
+                } else {
+                    console.log(e)
+                }
+            }
         },
     },
 })

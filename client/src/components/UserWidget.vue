@@ -6,7 +6,8 @@
     />
     <RegForm v-if="navStore.showRegForm" />
     <LoginForm v-if="navStore.showLoginForm" />
-    <ConfirmationForm  v-if="navStore.showConfirmation" />
+    <ConfirmationForm v-if="navStore.showConfirmation" />
+    <ProfileSection v-if="navStore.showProfile" />
   </div>
 </template>
 
@@ -16,6 +17,7 @@
   import RegForm from "@/components/RegForm.vue";
   import {useNavigationStore} from "@/stores/navigationStore";
   import LoginForm from "@/components/LoginForm.vue";
+  import ProfileSection from "@/components/ProfileSection/ProfileSection.vue";
 
   const navStore = useNavigationStore();
 </script>
