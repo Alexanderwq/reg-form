@@ -1,14 +1,13 @@
 import express from 'express'
 import {
     getAuthStatus,
-    getUserProfile,
     login,
     registration,
     sendConfirmationCode,
-    updateUserProfile, uploadProfilePhoto
 } from '../controllers/user.js'
 import auth from "../middleware/auth.js";
 import fileUpload from 'express-fileupload'
+import {getUserProfile, updateUserProfile, uploadProfilePhoto} from "../controllers/profile.js";
 
 const router = express.Router()
 
