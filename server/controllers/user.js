@@ -2,10 +2,11 @@ import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 import User from "../models/UserModel.js"
 import jwt from 'jsonwebtoken'
-import EmailCodes from "../models/EmailCodesModel.js";
+import EmailCodes from "../models/EmailCodesModel.js"
 
 dotenv.config()
-const TOKEN_SECRET = process.env.TOKEN_SECRET;
+const TOKEN_SECRET = process.env.TOKEN_SECRET
+const EXPIRES = '30m'
 
 export const getAuthStatus = async (req, res) => {
     return res.status(200).json({ authorization: true })
@@ -26,7 +27,7 @@ export const login = async (req, res) => {
         const token = jwt.sign(
             {id: user._id, email: user.email },
             TOKEN_SECRET,
-            { expiresIn: '30m'}
+            { expiresIn: EXPIRES}
         )
 
         return res.status(200).json({ user, token })
@@ -67,7 +68,7 @@ export const registration = async (req, res) => {
         const token = jwt.sign(
             {id: createdUser._id, email: createdUser.email },
             TOKEN_SECRET,
-            { expiresIn: '30m'}
+            { expiresIn: EXPIRES}
         )
 
         res.status(200).json({ user: createdUser, token })
