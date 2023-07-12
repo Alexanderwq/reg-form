@@ -38,6 +38,7 @@
   import usePassword from "@/composables/usePassword";
   import {ref} from "vue";
   import useAuth from "@/composables/useAuth";
+  import useCookie from "@/composables/useCookie";
 
   const { email, emailIsEmpty, emailIsValid, setEmail } = useEmail()
   const { password, passwordIsEmpty, setPassword } = usePassword()
@@ -45,6 +46,7 @@
   const { showAlert } = useAlertStore()
   const navStore = useNavigationStore()
   const profileStore = useProfileStore()
+  const { setCookie } = useCookie()
 
   const submitted = ref(false)
 
@@ -71,7 +73,7 @@
 
     try {
       const res = await signIn(email.value, password.value)
-      document.cookie = `token=${res.data.token}`
+      setCookie('token', res.data.token)
       navStore.setSection(navStore.profileSection)
       await profileStore.getProfile()
     } catch (e) {
