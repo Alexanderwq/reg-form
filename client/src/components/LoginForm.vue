@@ -4,16 +4,16 @@
       Войдите в систему
     </p>
     <FormInput
-      :value="userStore.email"
-      :valid="fieldsValidStatus.email"
-      @setValue="userStore.setEmail"
+      :value="email"
+      :valid="!submitted || (!emailIsEmpty && emailIsValid)"
+      @setValue="setEmail"
       name="email"
       label="Email"
     />
     <FormInput
-        :value="userStore.password"
-        :valid="fieldsValidStatus.password"
-        @setValue="userStore.setPassword"
+        :value="password"
+        :valid="!submitted || !passwordIsEmpty"
+        @setValue="setPassword"
         name="password"
         label="Пароль"
     />
@@ -33,55 +33,49 @@
   import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
-  import {ref} from "vue";
   import {useNavigationStore} from "@/stores/navigationStore";
   import {useProfileStore} from "@/stores/useProfileStore";
+  import useEmail from "@/composables/useEmail";
+  import usePassword from "@/composables/usePassword";
+  import {ref} from "vue";
 
+  const { email, emailIsEmpty, emailIsValid, setEmail } = useEmail()
+  const { password, passwordIsEmpty, setPassword } = usePassword()
   const userStore = useUserStore()
   const { showAlert } = useAlertStore()
   const navStore = useNavigationStore()
   const profileStore = useProfileStore()
 
-  const fieldsValidStatus = ref({
-    email: true,
-    password: true,
-  })
+  const submitted = ref(false)
 
   function formIsValid() {
-    if (userStore.emailIsEmpty) {
-      fieldsValidStatus.value.email = false;
+    if (emailIsEmpty.value) {
       showAlert('Ошибка! Не заполенено поле "Email"');
       return false;
     }
-    if (userStore.passwordIsEmpty) {
-      fieldsValidStatus.value.password = false;
+    if (passwordIsEmpty.value) {
       showAlert('Ошибка! Не заполенено поле "Пароль"');
       return false;
     }
-    if (!userStore.emailIsValid) {
-      fieldsValidStatus.value.email = false;
+    if (!emailIsValid.value) {
       showAlert('Ошибка! Не корректно заполнено поле "Email"')
       return false;
-    }
-
-    for (let key in fieldsValidStatus.value) {
-      fieldsValidStatus.value[key] = true;
     }
 
     return true
   }
 
   async function signIn() {
+    submitted.value = true
     if (!formIsValid()) return
 
     try {
-      const res = await userStore.signIn()
+      const res = await userStore.signIn(email.value, password.value)
       document.cookie = `token=${res.data.token}`
       navStore.setSection(navStore.profileSection)
-      profileStore.getProfile()
-      userStore.setPassword('')
+      await profileStore.getProfile()
     } catch (e) {
-      if (e.response.data.message) {
+      if (e.response?.data.message) {
         showAlert(e.response.data.message)
       } else {
         showAlert('Произошла ошибка на сервере!')
