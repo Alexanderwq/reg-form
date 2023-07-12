@@ -48,7 +48,7 @@
 
   const submitted = ref(false)
 
-  function formIsValid() {
+  function validateForm() {
     if (emailIsEmpty.value) {
       showAlert('Ошибка! Не заполенено поле "Email"');
       return false;
@@ -67,7 +67,7 @@
 
   async function signIn() {
     submitted.value = true
-    if (!formIsValid()) return
+    if (!validateForm()) return
 
     try {
       const res = await userStore.signIn(email.value, password.value)
