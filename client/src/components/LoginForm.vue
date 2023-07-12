@@ -18,7 +18,7 @@
         label="Пароль"
     />
     <FormButton
-        @click="signIn"
+        @click="submit"
         class="login-form__button"
     >
       <template v-slot:text>
@@ -30,7 +30,6 @@
 
 <script setup>
   import FormInput from "@/common/FormInput.vue";
-  import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
   import {useNavigationStore} from "@/stores/navigationStore";
@@ -38,10 +37,11 @@
   import useEmail from "@/composables/useEmail";
   import usePassword from "@/composables/usePassword";
   import {ref} from "vue";
+  import useAuth from "@/composables/useAuth";
 
   const { email, emailIsEmpty, emailIsValid, setEmail } = useEmail()
   const { password, passwordIsEmpty, setPassword } = usePassword()
-  const userStore = useUserStore()
+  const { signIn } = useAuth()
   const { showAlert } = useAlertStore()
   const navStore = useNavigationStore()
   const profileStore = useProfileStore()
@@ -65,12 +65,12 @@
     return true
   }
 
-  async function signIn() {
+  async function submit() {
     submitted.value = true
     if (!validateForm()) return
 
     try {
-      const res = await userStore.signIn(email.value, password.value)
+      const res = await signIn(email.value, password.value)
       document.cookie = `token=${res.data.token}`
       navStore.setSection(navStore.profileSection)
       await profileStore.getProfile()
