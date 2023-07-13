@@ -1,5 +1,5 @@
 <template>
-  <div class="reg-form">
+  <form class="reg-form" @submit.prevent="submitCode">
     <FormInput
       :value="userName"
       :valid="!submitted || !userNameIsEmpty"
@@ -36,7 +36,7 @@
         Зарегистрироваться
       </template>
     </FormButton>
-  </div>
+  </form>
 </template>
 
 <script setup>
@@ -69,25 +69,25 @@
   const getErrorMessage = computed(() => {
     let message = []
     if (userNameIsEmpty.value) {
-      message.push('Не заполенено поле "Имя" \n');
+      message.push('Не заполенено поле "Имя"');
     }
     if (emailIsEmpty.value) {
-      message.push('Не заполенено поле "Email" \n');
+      message.push('Не заполенено поле "Email"');
     }
     if (passwordIsEmpty.value) {
-      message.push('Не заполенено поле "Пароль" \n');
+      message.push('Не заполенено поле "Пароль"');
     }
     if (confirmPasswordIsEmpty.value) {
-      message.push('Не заполенено поле "Подтверждение пароля" \n');
+      message.push('Не заполенено поле "Подтверждение пароля"');
     }
     if (!emailIsValid.value) {
-      message.push('Не корректно заполнено поле Email \n')
+      message.push('Не корректно заполнено поле Email')
     }
     if (!passwordsMatch.value) {
-      message.push('Пароли не совпадают \n')
+      message.push('Пароли не совпадают')
     }
 
-    return 'Ошибка!\n' + message.join(' ');
+    return 'Ошибка!\n' + message.join('\n');
   })
 
   const formIsValid = computed(() => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="login-form">
+  <form class="login-form" @submit.prevent="submit">
     <p class="login-form__title">
       Войдите в систему
     </p>
@@ -25,7 +25,7 @@
         Войти
       </template>
     </FormButton>
-  </div>
+  </form>
 </template>
 
 <script setup>
@@ -36,7 +36,7 @@
   import {useProfileStore} from "@/stores/useProfileStore";
   import useEmail from "@/composables/useEmail";
   import usePassword from "@/composables/usePassword";
-  import {ref} from "vue";
+  import {computed, ref} from "vue";
   import useAuth from "@/composables/useAuth";
   import useCookie from "@/composables/useCookie";
 
@@ -50,26 +50,26 @@
 
   const submitted = ref(false)
 
-  function validateForm() {
+  const formIsValid = computed(() => !emailIsEmpty.value && !passwordIsEmpty.value && emailIsValid.value)
+
+  const getErrorMessage = computed(() => {
+    let message = []
     if (emailIsEmpty.value) {
-      showAlert('Ошибка! Не заполенено поле "Email"');
-      return false;
+      message.push('Не заполенено поле "Email"');
     }
     if (passwordIsEmpty.value) {
-      showAlert('Ошибка! Не заполенено поле "Пароль"');
-      return false;
+      message.push('Не заполенено поле "Пароль"');
     }
     if (!emailIsValid.value) {
-      showAlert('Ошибка! Не корректно заполнено поле "Email"')
-      return false;
+      message.push('Не корректно заполнено поле "Email"')
     }
 
-    return true
-  }
+    return 'Ошибка! \n' + message.join('\n')
+  })
 
   async function submit() {
     submitted.value = true
-    if (!validateForm()) return
+    if (!formIsValid.value) return showAlert(getErrorMessage.value)
 
     try {
       const res = await signIn(email.value, password.value)
