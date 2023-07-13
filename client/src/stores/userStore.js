@@ -74,10 +74,6 @@ export const useUserStore = defineStore('user', {
             );
         },
 
-        signIn() {
-            return api.signIn(this.email, this.password)
-        },
-
         async setAuthStatus() {
             try {
                 const res = await api.getAuthStatus()

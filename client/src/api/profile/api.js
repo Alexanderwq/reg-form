@@ -1,5 +1,7 @@
 import axios from "axios";
-import {getCookie} from "@/helpers/getCookie";
+import useCookie from "@/composables/useCookie";
+
+const { getCookie } = useCookie()
 
 export default {
     uploadProfilePhoto(file) {

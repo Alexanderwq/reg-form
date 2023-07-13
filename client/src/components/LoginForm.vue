@@ -4,21 +4,21 @@
       Войдите в систему
     </p>
     <FormInput
-      :value="userStore.email"
-      :valid="fieldsValidStatus.email"
-      @setValue="userStore.setEmail"
+      :value="email"
+      :valid="!submitted || (!emailIsEmpty && emailIsValid)"
+      @setValue="setEmail"
       name="email"
       label="Email"
     />
     <FormInput
-        :value="userStore.password"
-        :valid="fieldsValidStatus.password"
-        @setValue="userStore.setPassword"
+        :value="password"
+        :valid="!submitted || !passwordIsEmpty"
+        @setValue="setPassword"
         name="password"
         label="Пароль"
     />
     <FormButton
-        @click="signIn"
+        @click="submit"
         class="login-form__button"
     >
       <template v-slot:text>
@@ -30,58 +30,54 @@
 
 <script setup>
   import FormInput from "@/common/FormInput.vue";
-  import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
-  import {ref} from "vue";
   import {useNavigationStore} from "@/stores/navigationStore";
   import {useProfileStore} from "@/stores/useProfileStore";
+  import useEmail from "@/composables/useEmail";
+  import usePassword from "@/composables/usePassword";
+  import {ref} from "vue";
+  import useAuth from "@/composables/useAuth";
+  import useCookie from "@/composables/useCookie";
 
-  const userStore = useUserStore()
+  const { email, emailIsEmpty, emailIsValid, setEmail } = useEmail()
+  const { password, passwordIsEmpty, setPassword } = usePassword()
+  const { signIn } = useAuth()
   const { showAlert } = useAlertStore()
   const navStore = useNavigationStore()
   const profileStore = useProfileStore()
+  const { setCookie } = useCookie()
 
-  const fieldsValidStatus = ref({
-    email: true,
-    password: true,
-  })
+  const submitted = ref(false)
 
-  function formIsValid() {
-    if (userStore.emailIsEmpty) {
-      fieldsValidStatus.value.email = false;
+  function validateForm() {
+    if (emailIsEmpty.value) {
       showAlert('Ошибка! Не заполенено поле "Email"');
       return false;
     }
-    if (userStore.passwordIsEmpty) {
-      fieldsValidStatus.value.password = false;
+    if (passwordIsEmpty.value) {
       showAlert('Ошибка! Не заполенено поле "Пароль"');
       return false;
     }
-    if (!userStore.emailIsValid) {
-      fieldsValidStatus.value.email = false;
+    if (!emailIsValid.value) {
       showAlert('Ошибка! Не корректно заполнено поле "Email"')
       return false;
-    }
-
-    for (let key in fieldsValidStatus.value) {
-      fieldsValidStatus.value[key] = true;
     }
 
     return true
   }
 
-  async function signIn() {
-    if (!formIsValid()) return
+  async function submit() {
+    submitted.value = true
+    if (!validateForm()) return
 
     try {
-      const res = await userStore.signIn()
-      document.cookie = `token=${res.data.token}`
+      const res = await signIn(email.value, password.value)
+      setCookie('token', res.data.token)
       navStore.setSection(navStore.profileSection)
-      profileStore.getProfile()
-      userStore.setPassword('')
+      await profileStore.getProfile()
     } catch (e) {
-      if (e.response.data.message) {
+      if (e.response?.data.message) {
         showAlert(e.response.data.message)
       } else {
         showAlert('Произошла ошибка на сервере!')
