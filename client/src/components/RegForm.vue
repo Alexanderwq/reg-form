@@ -16,14 +16,14 @@
     />
     <FormInput
       :value="password"
-      :valid="!submitted || (passwordIsEmpty && passwordsMatch)"
+      :valid="!submitted || (!passwordIsEmpty && passwordsMatch)"
       @setValue="setPassword"
       name="password"
       label="Пароль"
     />
     <FormInput
       :value="confirmPassword"
-      :valid="!submitted || (confirmPasswordIsEmpty && passwordsMatch)"
+      :valid="!submitted || (!confirmPasswordIsEmpty && passwordsMatch)"
       @setValue="setConfirmPassword"
       name="confirmPassword"
       label="Подтверждение пароля"
@@ -66,40 +66,43 @@
 
   const passwordsMatch = computed(() => password.value === confirmPassword.value)
 
-  function validateForm() {
-    let formIsValid = true
-
+  const getErrorMessage = computed(() => {
+    let message = []
     if (userNameIsEmpty.value) {
-      showAlert('Ошибка! Не заполенено поле "Имя"');
-      formIsValid = false;
+      message.push('Не заполенено поле "Имя" \n');
     }
     if (emailIsEmpty.value) {
-      showAlert('Ошибка! Не заполенено поле "Email"');
-      formIsValid = false;
+      message.push('Не заполенено поле "Email" \n');
     }
     if (passwordIsEmpty.value) {
-      showAlert('Ошибка! Не заполенено поле "Пароль"');
-      formIsValid = false;
+      message.push('Не заполенено поле "Пароль" \n');
     }
     if (confirmPasswordIsEmpty.value) {
-      showAlert('Ошибка! Не заполенено поле "Подтверждение пароля"');
-      formIsValid = false;
+      message.push('Не заполенено поле "Подтверждение пароля" \n');
     }
     if (!emailIsValid.value) {
-      showAlert('Ошибка! Не корректно заполнено поле Email')
-      formIsValid = false;
+      message.push('Не корректно заполнено поле Email \n')
     }
     if (!passwordsMatch.value) {
-      showAlert('Ошибка! Пароли не совпадают')
-      formIsValid = false;
+      message.push('Пароли не совпадают \n')
     }
 
-    return formIsValid;
-  }
+    return 'Ошибка!\n' + message.join(' ');
+  })
+
+  const formIsValid = computed(() => {
+    return !userNameIsEmpty.value &&
+        !emailIsEmpty.value &&
+        !passwordIsEmpty.value &&
+        !confirmPasswordIsEmpty.value &&
+        emailIsValid.value &&
+        passwordsMatch.value
+  })
+
 
   async function submitCode(email) {
     submitted.value = true
-    if (!validateForm()) return
+    if (!formIsValid.value) return showAlert(getErrorMessage.value)
 
     try {
       await sendConfirmationCode(email.value)
