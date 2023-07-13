@@ -1,30 +1,30 @@
 <template>
   <div class="reg-form">
     <FormInput
-      :value="userStore.userName"
-      :valid="fieldsValidStatus.userName"
-      @setValue="userStore.setUserName"
+      :value="userName"
+      :valid="!submitted || !userNameIsEmpty"
+      @setValue="setUserName"
       name="name"
       label="Имя"
     />
     <FormInput
-      :value="userStore.email"
-      :valid="fieldsValidStatus.email"
-      @setValue="userStore.setEmail"
+      :value="email"
+      :valid="!submitted || ( !emailIsEmpty && emailIsValid )"
+      @setValue="setEmail"
       name="email"
       label="Email"
     />
     <FormInput
-      :value="userStore.password"
-      :valid="fieldsValidStatus.password"
-      @setValue="userStore.setPassword"
+      :value="password"
+      :valid="!submitted || (!passwordIsEmpty && passwordsMatch)"
+      @setValue="setPassword"
       name="password"
       label="Пароль"
     />
     <FormInput
-      :value="userStore.confirmPassword"
-      :valid="fieldsValidStatus.confirmPassword"
-      @setValue="userStore.setConfirmPassword"
+      :value="confirmPassword"
+      :valid="!submitted || (!confirmPasswordIsEmpty && passwordsMatch)"
+      @setValue="setConfirmPassword"
       name="confirmPassword"
       label="Подтверждение пароля"
     />
@@ -41,75 +41,73 @@
 
 <script setup>
   import FormInput from "@/common/FormInput.vue";
-  import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
   import {useNavigationStore} from "@/stores/navigationStore";
-  import {ref} from "vue";
+  import {computed, ref} from "vue";
+  import useEmail from "@/composables/useEmail";
+  import usePassword from "@/composables/usePassword";
+  import useUserName from "@/composables/useUserName";
+  import useAuth from "@/composables/useAuth";
 
-  const userStore = useUserStore()
   const { showAlert } = useAlertStore()
+  const { sendConfirmationCode } = useAuth()
   const {confirmationSection, setSection } = useNavigationStore()
+  const { userName, userNameIsEmpty, setUserName } = useUserName()
+  const { email, emailIsEmpty, emailIsValid, setEmail } = useEmail()
+  const { password, passwordIsEmpty, setPassword } = usePassword()
+  const {
+    password: confirmPassword,
+    passwordIsEmpty: confirmPasswordIsEmpty,
+    setPassword: setConfirmPassword
+  } = usePassword()
 
-  const fieldsValidStatus = ref({
-    userName: true,
-    email: true,
-    code: true,
-    password: true,
-    confirmPassword: true,
+  const submitted = ref(false)
+
+  const passwordsMatch = computed(() => password.value === confirmPassword.value)
+
+  const getErrorMessage = computed(() => {
+    let message = []
+    if (userNameIsEmpty.value) {
+      message.push('Не заполенено поле "Имя" \n');
+    }
+    if (emailIsEmpty.value) {
+      message.push('Не заполенено поле "Email" \n');
+    }
+    if (passwordIsEmpty.value) {
+      message.push('Не заполенено поле "Пароль" \n');
+    }
+    if (confirmPasswordIsEmpty.value) {
+      message.push('Не заполенено поле "Подтверждение пароля" \n');
+    }
+    if (!emailIsValid.value) {
+      message.push('Не корректно заполнено поле Email \n')
+    }
+    if (!passwordsMatch.value) {
+      message.push('Пароли не совпадают \n')
+    }
+
+    return 'Ошибка!\n' + message.join(' ');
   })
 
-  function resetFields() {
-    for (let key in fieldsValidStatus.value) {
-      fieldsValidStatus.value[key] = true;
-    }
-  }
+  const formIsValid = computed(() => {
+    return !userNameIsEmpty.value &&
+        !emailIsEmpty.value &&
+        !passwordIsEmpty.value &&
+        !confirmPasswordIsEmpty.value &&
+        emailIsValid.value &&
+        passwordsMatch.value
+  })
 
-  function formIsValid() {
-    if (userStore.userNameIsEmpty) {
-      showAlert('Ошибка! Не заполенено поле "Имя"');
-      fieldsValidStatus.value.userName = false;
-      return false;
-    }
-    if (userStore.emailIsEmpty) {
-      showAlert('Ошибка! Не заполенено поле "Email"');
-      fieldsValidStatus.value.email = false;
-      return false;
-    }
-    if (userStore.passwordIsEmpty) {
-      showAlert('Ошибка! Не заполенено поле "Пароль"');
-      fieldsValidStatus.value.password = false;
-      return false;
-    }
-    if (userStore.confirmPasswordIsEmpty) {
-      showAlert('Ошибка! Не заполенено поле "Подтверждение пароля"');
-      fieldsValidStatus.value.confirmPassword = false;
-      return false;
-    }
-    if (!userStore.emailIsValid) {
-      showAlert('Ошибка! Не корректно заполнено поле Email')
-      fieldsValidStatus.value.email = false;
-      return false;
-    }
-    if (!userStore.passwordsMatch) {
-      showAlert('Ошибка! Пароли не совпадают')
-      fieldsValidStatus.value.password = false;
-      fieldsValidStatus.value.confirmPassword = false;
-      return false;
-    }
-
-    resetFields()
-
-    return true;
-  }
 
   async function submitCode(email) {
-    if (!formIsValid()) return
+    submitted.value = true
+    if (!formIsValid.value) return showAlert(getErrorMessage.value)
 
     try {
-      await userStore.sendConfirmationCode(email)
+      await sendConfirmationCode(email.value)
     } catch (e) {
-      if (e.response.data.message) {
+      if (e.response?.data.message) {
         showAlert(e.response.data.message)
       } else {
         showAlert('Произошла ошибка на сервере!')

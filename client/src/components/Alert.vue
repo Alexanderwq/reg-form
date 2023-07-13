@@ -52,6 +52,7 @@ const alertStore = useAlertStore();
       font-style: normal;
       font-weight: 400;
       line-height: normal;
+      white-space: pre-line
     }
 
     &__close{

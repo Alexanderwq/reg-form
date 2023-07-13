@@ -52,9 +52,6 @@ export const useUserStore = defineStore('user', {
         setCode(value) {
             this.code = value;
         },
-        sendConfirmationCode() {
-            return api.sendConfirmationCode(this.email)
-        },
 
         resetUserData() {
             this.setUserName('')
