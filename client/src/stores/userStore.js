@@ -8,7 +8,6 @@ export const useUserStore = defineStore('user', {
         password: '',
         email: '',
         confirmPassword: '',
-        code: '',
     }),
 
     getters: {
@@ -23,9 +22,6 @@ export const useUserStore = defineStore('user', {
         },
         confirmPasswordIsEmpty() {
             return this.confirmPassword.length === 0
-        },
-        codeIsEmpty() {
-            return this.code.length === 0
         },
         emailIsValid() {
             const regExp = new RegExp('[a-z0-9]+@[a-z]+\\.[a-z]{2,3}');
@@ -49,16 +45,12 @@ export const useUserStore = defineStore('user', {
         setConfirmPassword(value) {
             this.confirmPassword = value;
         },
-        setCode(value) {
-            this.code = value;
-        },
 
         resetUserData() {
             this.setUserName('')
             this.setEmail('')
             this.setPassword('')
             this.setConfirmPassword('')
-            this.setCode('')
         },
 
         signUp() {
@@ -67,7 +59,6 @@ export const useUserStore = defineStore('user', {
                 this.email,
                 this.password,
                 this.confirmPassword,
-                this.code
             );
         },
 
