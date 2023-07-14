@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import api from "@/api/auth/api";
-import {useUserStore} from "@/stores/userStore";
 
 export const useProfileStore = defineStore('profile', {
     state: () => ({
@@ -80,13 +79,11 @@ export const useProfileStore = defineStore('profile', {
         },
 
         updateProfile() {
-            const userStore = useUserStore()
-
             return api.updateProfile(
-                userStore.userName,
-                userStore.email,
-                userStore.password,
-                userStore.confirmPassword
+                this.userName,
+                this.email,
+                this.password,
+                this.confirmPassword
             )
         },
 

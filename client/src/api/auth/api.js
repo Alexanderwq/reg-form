@@ -48,11 +48,11 @@ export default {
         })).data
     },
 
-    getAuthStatus() {
-        return axios.get('/get_auth_status', {
+    async getAuthStatus() {
+        return (await axios.get('/get_auth_status', {
             headers: {
                 'authorization': getCookie('token'),
             }
-        })
+        })).data
     }
 }
