@@ -40,12 +40,12 @@ export default {
         )
     },
 
-    getProfile() {
-        return axios.get('/get_user_profile', {
+    async getProfile() {
+        return (await axios.get('/get_user_profile', {
             headers: {
                 'authorization': getCookie('token'),
             }
-        })
+        })).data
     },
 
     getAuthStatus() {

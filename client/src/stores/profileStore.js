@@ -4,6 +4,10 @@ import {useUserStore} from "@/stores/userStore";
 
 export const useProfileStore = defineStore('profile', {
     state: () => ({
+        userName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
         emailIsDisabled: true,
         userNameIsDisabled: true,
         passwordIsDisabled: true,
@@ -12,6 +16,25 @@ export const useProfileStore = defineStore('profile', {
     }),
 
     getters: {
+        userNameIsEmpty(){
+            return this.userName.length === 0
+        },
+        emailIsEmpty() {
+            return this.email.length === 0
+        },
+        passwordIsEmpty() {
+            return this.password.length === 0
+        },
+        confirmPasswordIsEmpty() {
+            return this.confirmPassword.length === 0
+        },
+        emailIsValid() {
+            const regExp = new RegExp('[a-z0-9]+@[a-z]+\\.[a-z]{2,3}');
+            return regExp.test(this.email)
+        },
+        passwordsMatch() {
+            return this.password === this.confirmPassword
+        },
         showOptionsPanel() {
             return !this.emailIsDisabled ||
                 !this.userNameIsDisabled ||
@@ -21,6 +44,18 @@ export const useProfileStore = defineStore('profile', {
     },
 
     actions: {
+        setUserName(value) {
+            this.userName = value
+        },
+        setEmail(value) {
+            this.email = value
+        },
+        setPassword(value) {
+            this.password = value
+        },
+        setConfirmPassword(value) {
+            this.confirmPassword = value
+        },
         setEmailIsDisabled(value) {
             this.emailIsDisabled = value;
         },
@@ -55,19 +90,23 @@ export const useProfileStore = defineStore('profile', {
             )
         },
 
+        resetUserData() {
+            this.setUserName('')
+            this.setEmail('')
+            this.setPassword('')
+            this.setConfirmPassword('')
+        },
+
         async getProfile() {
-            const userStore = useUserStore()
-            const res = await api.getProfile()
-            userStore.setEmail(res.data.email)
-            userStore.setUserName(res.data.userName)
-            this.imgName = res.data.img
+            const { email, userName, img } = await api.getProfile()
+            this.setEmail(email)
+            this.setUserName(userName)
+            this.imgName = img
         },
 
         async resetProfile() {
-            const userStore = useUserStore()
-
             this.disableFields()
-            userStore.resetUserData()
+            this.resetUserData()
             await this.getProfile()
         }
     },

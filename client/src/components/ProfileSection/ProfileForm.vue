@@ -1,27 +1,27 @@
 <template>
   <div class="profile-form">
     <ProfileInput
-      :value="userStore.userName"
+      :value="profileStore.userName"
       :disabled="profileStore.userNameIsDisabled"
-      @inputValue="userStore.setUserName"
+      @inputValue="profileStore.setUserName"
       @enableInput="profileStore.setUserNameIsDisabled(false)"
     />
     <ProfileInput
-      :value="userStore.email"
+      :value="profileStore.email"
       :disabled="profileStore.emailIsDisabled"
-      @inputValue="userStore.setEmail"
+      @inputValue="profileStore.setEmail"
       @enableInput="profileStore.setEmailIsDisabled(false)"
     />
     <ProfileInput
-        :value="userStore.password"
+        :value="profileStore.password"
         :disabled="profileStore.passwordIsDisabled"
-        @inputValue="userStore.setPassword"
+        @inputValue="profileStore.setPassword"
         @enableInput="profileStore.setPasswordIsDisabled(false)"
     />
     <ProfileInput
-        :value="userStore.confirmPassword"
+        :value="profileStore.confirmPassword"
         :disabled="profileStore.confirmPasswordIsDisabled"
-        @inputValue="userStore.setConfirmPassword"
+        @inputValue="profileStore.setConfirmPassword"
         @enableInput="profileStore.setConfirmPasswordIsDisabled(false)"
     />
   </div>
@@ -29,10 +29,8 @@
 
 <script setup>
   import ProfileInput from "@/components/ProfileSection/ProfileInput.vue";
-  import {useUserStore} from "@/stores/userStore";
   import {useProfileStore} from "@/stores/profileStore";
 
-  const userStore = useUserStore()
   const profileStore = useProfileStore()
 </script>
 
