@@ -2,7 +2,7 @@
   <label class="photo-block">
     <img class="photo-block__img" :src="imgSrc" alt="photo" />
     <p class="photo-block__name">
-      {{ userStore.userName }}
+      {{ profileStore.userName }}
     </p>
     <input @change="uploadPhoto" type="file" hidden />
   </label>
@@ -12,13 +12,11 @@
   import api from "@/api/profile/api";
   import {computed} from "vue";
   import {useAlertStore} from "@/stores/alertStore";
-  import {useUserStore} from "@/stores/userStore";
   import {useProfileStore} from "@/stores/profileStore";
   const URL_IMG = '/photos'
   const DEFAULT_SRC = '/img/default-photo.png'
 
   const profileStore = useProfileStore()
-  const userStore = useUserStore()
   const alertStore = useAlertStore()
 
   const imgSrc = computed(() => {
