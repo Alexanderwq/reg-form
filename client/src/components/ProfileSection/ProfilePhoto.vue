@@ -11,9 +11,9 @@
 <script setup>
   import api from "@/api/profile/api";
   import {computed} from "vue";
-  import {useProfileStore} from "@/stores/useProfileStore";
   import {useAlertStore} from "@/stores/alertStore";
   import {useUserStore} from "@/stores/userStore";
+  import {useProfileStore} from "@/stores/profileStore";
   const URL_IMG = '/photos'
   const DEFAULT_SRC = '/img/default-photo.png'
 

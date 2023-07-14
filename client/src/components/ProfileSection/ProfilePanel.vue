@@ -16,7 +16,7 @@
 
 <script setup>
   import FormButton from "@/common/FormButton.vue";
-  import {useProfileStore} from "@/stores/useProfileStore";
+  import {useProfileStore} from "@/stores/profileStore";
   import {useAlertStore} from "@/stores/alertStore";
   import {useUserStore} from "@/stores/userStore";
 

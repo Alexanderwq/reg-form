@@ -11,7 +11,7 @@
   import {useUserStore} from "@/stores/userStore";
   import {useNavigationStore} from "@/stores/navigationStore";
   import {onMounted, ref, shallowRef} from "vue";
-  import {useProfileStore} from "@/stores/useProfileStore";
+  import {useProfileStore} from "@/stores/profileStore";
 
   const navStore = useNavigationStore()
   const userStore = useUserStore()

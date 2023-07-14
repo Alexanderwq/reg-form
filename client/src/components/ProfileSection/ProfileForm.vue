@@ -30,7 +30,7 @@
 <script setup>
   import ProfileInput from "@/components/ProfileSection/ProfileInput.vue";
   import {useUserStore} from "@/stores/userStore";
-  import {useProfileStore} from "@/stores/useProfileStore";
+  import {useProfileStore} from "@/stores/profileStore";
 
   const userStore = useUserStore()
   const profileStore = useProfileStore()

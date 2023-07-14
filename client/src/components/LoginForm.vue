@@ -32,10 +32,10 @@
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
   import {useNavigationStore} from "@/stores/navigationStore";
-  import {useProfileStore} from "@/stores/useProfileStore";
   import {computed, ref} from "vue";
   import useCookie from "@/composables/useCookie";
   import {useAuthStore} from "@/stores/authStore";
+  import {useProfileStore} from "@/stores/profileStore";
 
   const authStore = useAuthStore()
   const { showAlert } = useAlertStore()
