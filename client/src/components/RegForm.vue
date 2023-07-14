@@ -1,36 +1,35 @@
 <template>
-  <form class="reg-form" @submit.prevent="submitCode">
+  <form class="reg-form" @submit.prevent="submitForm">
     <FormInput
-      :value="userName"
-      :valid="!submitted || !userNameIsEmpty"
-      @setValue="setUserName"
+      :value="authStore.userName"
+      :valid="!submitted || !authStore.userNameIsEmpty"
+      @setValue="authStore.setUserName"
       name="name"
       label="Имя"
     />
     <FormInput
-      :value="email"
-      :valid="!submitted || ( !emailIsEmpty && emailIsValid )"
-      @setValue="setEmail"
+      :value="authStore.email"
+      :valid="!submitted || ( !authStore.emailIsEmpty && authStore.emailIsValid )"
+      @setValue="authStore.setEmail"
       name="email"
       label="Email"
     />
     <FormInput
-      :value="password"
-      :valid="!submitted || (!passwordIsEmpty && passwordsMatch)"
-      @setValue="setPassword"
+      :value="authStore.password"
+      :valid="!submitted || (!authStore.passwordIsEmpty && authStore.passwordsMatch)"
+      @setValue="authStore.setPassword"
       name="password"
       label="Пароль"
     />
     <FormInput
-      :value="confirmPassword"
-      :valid="!submitted || (!confirmPasswordIsEmpty && passwordsMatch)"
-      @setValue="setConfirmPassword"
+      :value="authStore.confirmPassword"
+      :valid="!submitted || (!authStore.confirmPasswordIsEmpty && authStore.passwordsMatch)"
+      @setValue="authStore.setConfirmPassword"
       name="confirmPassword"
       label="Подтверждение пароля"
     />
     <FormButton
       class="reg-form__button"
-      @click="submitCode"
     >
       <template v-slot:text>
         Зарегистрироваться
@@ -43,47 +42,34 @@
   import FormInput from "@/common/FormInput.vue";
   import FormButton from "@/common/FormButton.vue";
   import {useAlertStore} from "@/stores/alertStore";
-  import {useNavigationStore} from "@/stores/navigationStore";
   import {computed, ref} from "vue";
-  import useEmail from "@/composables/useEmail";
-  import usePassword from "@/composables/usePassword";
-  import useUserName from "@/composables/useUserName";
-  import useAuth from "@/composables/useAuth";
+  import {useNavigationStore} from "@/stores/navigationStore";
+  import {useAuthStore} from "@/stores/authStore";
 
+  const { confirmationSection, setSection } = useNavigationStore()
   const { showAlert } = useAlertStore()
-  const { sendConfirmationCode } = useAuth()
-  const {confirmationSection, setSection } = useNavigationStore()
-  const { userName, userNameIsEmpty, setUserName } = useUserName()
-  const { email, emailIsEmpty, emailIsValid, setEmail } = useEmail()
-  const { password, passwordIsEmpty, setPassword } = usePassword()
-  const {
-    password: confirmPassword,
-    passwordIsEmpty: confirmPasswordIsEmpty,
-    setPassword: setConfirmPassword
-  } = usePassword()
+  const authStore = useAuthStore()
 
   const submitted = ref(false)
 
-  const passwordsMatch = computed(() => password.value === confirmPassword.value)
-
   const getErrorMessage = computed(() => {
     let message = []
-    if (userNameIsEmpty.value) {
+    if (authStore.userNameIsEmpty) {
       message.push('Не заполенено поле "Имя"');
     }
-    if (emailIsEmpty.value) {
+    if (authStore.emailIsEmpty) {
       message.push('Не заполенено поле "Email"');
     }
-    if (passwordIsEmpty.value) {
+    if (authStore.passwordIsEmpty) {
       message.push('Не заполенено поле "Пароль"');
     }
-    if (confirmPasswordIsEmpty.value) {
+    if (authStore.confirmPasswordIsEmpty) {
       message.push('Не заполенено поле "Подтверждение пароля"');
     }
-    if (!emailIsValid.value) {
+    if (!authStore.emailIsValid) {
       message.push('Не корректно заполнено поле Email')
     }
-    if (!passwordsMatch.value) {
+    if (!authStore.passwordsMatch) {
       message.push('Пароли не совпадают')
     }
 
@@ -91,21 +77,20 @@
   })
 
   const formIsValid = computed(() => {
-    return !userNameIsEmpty.value &&
-        !emailIsEmpty.value &&
-        !passwordIsEmpty.value &&
-        !confirmPasswordIsEmpty.value &&
-        emailIsValid.value &&
-        passwordsMatch.value
+    return !authStore.userNameIsEmpty &&
+        !authStore.emailIsEmpty &&
+        !authStore.passwordIsEmpty &&
+        !authStore.confirmPasswordIsEmpty &&
+        authStore.emailIsValid &&
+        authStore.passwordsMatch
   })
 
-
-  async function submitCode(email) {
+  async function submitForm() {
     submitted.value = true
-    if (!formIsValid.value) return showAlert(getErrorMessage.value)
+    if (!formIsValid.value) return showAlert(getErrorMessage)
 
     try {
-      await sendConfirmationCode(email.value)
+      await authStore.sendConfirmationCode()
     } catch (e) {
       if (e.response?.data.message) {
         showAlert(e.response.data.message)

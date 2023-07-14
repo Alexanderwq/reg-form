@@ -4,8 +4,8 @@ import useCookie from "@/composables/useCookie";
 const { getCookie } = useCookie()
 
 export default {
-    sendConfirmationCode(email) {
-        return axios.post('/send_code', { email });
+    async sendConfirmationCode(email) {
+        return (await axios.post('/send_code', { email })).data;
     },
 
     signUp(userName, email, password, confirmPassword, code) {

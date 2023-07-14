@@ -5,12 +5,7 @@ export default function useAuth() {
         return api.signIn(email, password)
     }
 
-    function sendConfirmationCode(email) {
-        return api.sendConfirmationCode(email)
-    }
-
     return {
         signIn,
-        sendConfirmationCode,
     }
 }

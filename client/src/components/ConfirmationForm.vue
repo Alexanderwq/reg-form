@@ -1,5 +1,5 @@
 <template>
-  <div class="confirm-form">
+  <form class="confirm-form" @submit.prevent="submitCode">
     <p class="confirm-form__title">
       Подтверждение через почту
     </p>
@@ -18,7 +18,6 @@
       class="confirm-form__input"
     />
     <FormButton
-      @click="submitCode"
       class="confirm-form__button"
     >
       <template v-slot:text>
@@ -29,7 +28,7 @@
     <TimeWidget
       class="confirm-form__resend"
     />
-  </div>
+  </form>
 </template>
 
 <script setup>
