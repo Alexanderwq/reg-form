@@ -1,5 +1,5 @@
 <template>
-  <div class="confirm-form">
+  <form class="confirm-form" @submit.prevent="submitCode">
     <p class="confirm-form__title">
       Подтверждение через почту
     </p>
@@ -10,15 +10,14 @@
       Письмо возможно попадает в спам
     </p>
     <FormInput
-      :value="userStore.code"
-      :valid="codeIsValid"
-      @setValue="userStore.setCode"
+      :value="authStore.code"
+      :valid="!submittedForm || !authStore.codeIsEmpty"
+      @setValue="authStore.setCode"
       name="code"
       label="Код подтверждения с Email"
       class="confirm-form__input"
     />
     <FormButton
-      @click="submitCode"
       class="confirm-form__button"
     >
       <template v-slot:text>
@@ -29,36 +28,37 @@
     <TimeWidget
       class="confirm-form__resend"
     />
-  </div>
+  </form>
 </template>
 
 <script setup>
   import FormInput from "@/common/FormInput.vue";
-  import {useUserStore} from "@/stores/userStore";
   import FormButton from "@/common/FormButton.vue";
   import TimeWidget from "@/components/TimeWidget.vue";
   import {useAlertStore} from "@/stores/alertStore";
   import {ref} from "vue";
   import {useNavigationStore} from "@/stores/navigationStore";
+  import useCookie from "@/composables/useCookie";
+  import {useAuthStore} from "@/stores/authStore";
 
-  const userStore = useUserStore()
   const alertStore = useAlertStore()
   const navStore = useNavigationStore()
+  const { setCookie } = useCookie()
+  const authStore = useAuthStore()
 
-  const codeIsValid = ref(true);
+  const submittedForm = ref(false);
 
   async function submitCode() {
-    if (userStore.codeIsEmpty) {
+    submittedForm.value = true;
+
+    if (authStore.codeIsEmpty) {
       alertStore.showAlert('Ошибка! Поле с кодом не должно быть пустым!')
-      codeIsValid.value = false;
       return
     }
 
-    codeIsValid.value = true;
-
     try{
-      const res = await userStore.signUp()
-      document.cookie = `token=${res.data.token}`
+      const res = await authStore.signUp()
+      setCookie('token', res.token)
       navStore.setSection(navStore.profileSection)
     } catch (e) {
       if (e.response.data.message) {

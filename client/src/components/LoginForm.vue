@@ -4,21 +4,20 @@
       Войдите в систему
     </p>
     <FormInput
-      :value="email"
-      :valid="!submitted || (!emailIsEmpty && emailIsValid)"
-      @setValue="setEmail"
+      :value="authStore.email"
+      :valid="!submitted || (!authStore.emailIsEmpty && authStore.emailIsValid)"
+      @setValue="authStore.setEmail"
       name="email"
       label="Email"
     />
     <FormInput
-        :value="password"
-        :valid="!submitted || !passwordIsEmpty"
-        @setValue="setPassword"
+        :value="authStore.password"
+        :valid="!submitted || !authStore.passwordIsEmpty"
+        @setValue="authStore.setPassword"
         name="password"
         label="Пароль"
     />
     <FormButton
-        @click="submit"
         class="login-form__button"
     >
       <template v-slot:text>
@@ -34,15 +33,11 @@
   import {useAlertStore} from "@/stores/alertStore";
   import {useNavigationStore} from "@/stores/navigationStore";
   import {useProfileStore} from "@/stores/useProfileStore";
-  import useEmail from "@/composables/useEmail";
-  import usePassword from "@/composables/usePassword";
   import {computed, ref} from "vue";
-  import useAuth from "@/composables/useAuth";
   import useCookie from "@/composables/useCookie";
+  import {useAuthStore} from "@/stores/authStore";
 
-  const { email, emailIsEmpty, emailIsValid, setEmail } = useEmail()
-  const { password, passwordIsEmpty, setPassword } = usePassword()
-  const { signIn } = useAuth()
+  const authStore = useAuthStore()
   const { showAlert } = useAlertStore()
   const navStore = useNavigationStore()
   const profileStore = useProfileStore()
@@ -50,17 +45,17 @@
 
   const submitted = ref(false)
 
-  const formIsValid = computed(() => !emailIsEmpty.value && !passwordIsEmpty.value && emailIsValid.value)
+  const formIsValid = computed(() => !authStore.emailIsEmpty && !authStore.passwordIsEmpty && authStore.emailIsValid)
 
   const getErrorMessage = computed(() => {
     let message = []
-    if (emailIsEmpty.value) {
+    if (authStore.emailIsEmpty) {
       message.push('Не заполенено поле "Email"');
     }
-    if (passwordIsEmpty.value) {
+    if (authStore.passwordIsEmpty) {
       message.push('Не заполенено поле "Пароль"');
     }
-    if (!emailIsValid.value) {
+    if (!authStore.emailIsValid) {
       message.push('Не корректно заполнено поле "Email"')
     }
 
@@ -72,8 +67,8 @@
     if (!formIsValid.value) return showAlert(getErrorMessage.value)
 
     try {
-      const res = await signIn(email.value, password.value)
-      setCookie('token', res.data.token)
+      const { token } = await authStore.signIn()
+      setCookie('token', token)
       navStore.setSection(navStore.profileSection)
       await profileStore.getProfile()
     } catch (e) {

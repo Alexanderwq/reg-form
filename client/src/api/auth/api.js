@@ -4,25 +4,25 @@ import useCookie from "@/composables/useCookie";
 const { getCookie } = useCookie()
 
 export default {
-    sendConfirmationCode(email) {
-        return axios.post('/send_code', { email });
+    async sendConfirmationCode(email) {
+        return (await axios.post('/send_code', { email })).data;
     },
 
-    signUp(userName, email, password, confirmPassword, code) {
-        return axios.post('/registration', {
+    async signUp(userName, email, password, confirmPassword, code) {
+        return (await axios.post('/registration', {
             userName,
             email,
             password,
             confirmPassword,
             confirmCode: code
-        });
+        })).data;
     },
 
-    signIn(email, password) {
-        return axios.post('/login', {
+    async signIn(email, password) {
+        return (await axios.post('/login', {
             email,
             password,
-        });
+        })).data;
     },
 
     updateProfile(userName, email, password, confirmPassword) {
