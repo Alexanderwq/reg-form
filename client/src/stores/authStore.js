@@ -36,6 +36,9 @@ export const useAuthStore = defineStore('auth', {
     },
 
     actions: {
+        signIn() {
+            return api.signIn(this.email, this.password)
+        },
         sendConfirmationCode() {
             return api.sendConfirmationCode(this.email)
         },

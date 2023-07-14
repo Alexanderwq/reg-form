@@ -18,11 +18,11 @@ export default {
         })).data;
     },
 
-    signIn(email, password) {
-        return axios.post('/login', {
+    async signIn(email, password) {
+        return (await axios.post('/login', {
             email,
             password,
-        });
+        })).data;
     },
 
     updateProfile(userName, email, password, confirmPassword) {
