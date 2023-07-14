@@ -25,29 +25,6 @@ export default {
         })).data;
     },
 
-    updateProfile(userName, email, password, confirmPassword) {
-        return axios.post('/update_user_profile', {
-            userName,
-            email,
-            password,
-            confirmPassword,
-        },
-        {
-                headers: {
-                    'authorization': getCookie('token'),
-                }
-            }
-        )
-    },
-
-    async getProfile() {
-        return (await axios.get('/get_user_profile', {
-            headers: {
-                'authorization': getCookie('token'),
-            }
-        })).data
-    },
-
     async getAuthStatus() {
         return (await axios.get('/get_auth_status', {
             headers: {
