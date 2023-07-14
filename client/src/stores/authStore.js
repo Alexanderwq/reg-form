@@ -30,11 +30,23 @@ export const useAuthStore = defineStore('auth', {
         passwordsMatch() {
             return this.confirmPassword === this.password
         },
+        codeIsEmpty() {
+            return this.code.length === 0
+        },
     },
 
     actions: {
         sendConfirmationCode() {
             return api.sendConfirmationCode(this.email)
+        },
+        signUp() {
+            return api.signUp(
+                this.userName,
+                this.email,
+                this.password,
+                this.confirmPassword,
+                this.code
+            );
         },
         setUserName(value) {
             this.userName = value

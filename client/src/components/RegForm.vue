@@ -87,7 +87,7 @@
 
   async function submitForm() {
     submitted.value = true
-    if (!formIsValid.value) return showAlert(getErrorMessage)
+    if (!formIsValid.value) return showAlert(getErrorMessage.value)
 
     try {
       await authStore.sendConfirmationCode()

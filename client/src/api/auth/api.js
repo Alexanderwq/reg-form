@@ -8,14 +8,14 @@ export default {
         return (await axios.post('/send_code', { email })).data;
     },
 
-    signUp(userName, email, password, confirmPassword, code) {
-        return axios.post('/registration', {
+    async signUp(userName, email, password, confirmPassword, code) {
+        return (await axios.post('/registration', {
             userName,
             email,
             password,
             confirmPassword,
             confirmCode: code
-        });
+        })).data;
     },
 
     signIn(email, password) {
