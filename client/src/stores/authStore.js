@@ -51,6 +51,9 @@ export const useAuthStore = defineStore('auth', {
                 this.code
             );
         },
+        getAuthStatus() {
+            return api.getAuthStatus()
+        },
         setUserName(value) {
             this.userName = value
         },

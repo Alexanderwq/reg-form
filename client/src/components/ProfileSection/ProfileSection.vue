@@ -12,7 +12,7 @@
   import ProfilePhoto from "@/components/ProfileSection/ProfilePhoto.vue";
   import ProfileForm from "@/components/ProfileSection/ProfileForm.vue";
   import ProfilePanel from "@/components/ProfileSection/ProfilePanel.vue";
-  import {useProfileStore} from "@/stores/useProfileStore";
+  import {useProfileStore} from "@/stores/profileStore";
 
   const profileStore = useProfileStore()
 </script>

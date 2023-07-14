@@ -16,48 +16,53 @@
 
 <script setup>
   import FormButton from "@/common/FormButton.vue";
-  import {useProfileStore} from "@/stores/useProfileStore";
+  import {useProfileStore} from "@/stores/profileStore";
   import {useAlertStore} from "@/stores/alertStore";
-  import {useUserStore} from "@/stores/userStore";
+  import {computed} from "vue";
 
   const { showAlert } = useAlertStore()
-  const userStore = useUserStore()
   const profileStore = useProfileStore()
 
-  function validFields() {
-    if (!profileStore.userNameIsDisabled && userStore.userNameIsEmpty) {
-      showAlert('Ошибка! Поле с именем должно быть заполнено')
-      return false;
+  const formIsValid = computed(() => {
+    return (profileStore.userNameIsDisabled || !profileStore.userNameIsEmpty) &&
+        (profileStore.emailIsDisabled || !profileStore.emailIsEmpty) &&
+        (profileStore.passwordIsDisabled || !profileStore.passwordIsEmpty) &&
+        (profileStore.confirmPasswordIsDisabled || !profileStore.confirmPasswordIsEmpty) &&
+        profileStore.passwordsMatch
+  })
+
+  const getErrorMessage = computed(() => {
+    let message = []
+    if (!profileStore.userNameIsDisabled && profileStore.userNameIsEmpty) {
+      message.push('Не заполенено поле "Имя"');
     }
-    if (!profileStore.emailIsDisabled && userStore.emailIsEmpty) {
-      showAlert('Ошибка! Поле email должно быть заполнено')
-      return false;
+    if (!profileStore.emailIsDisabled && profileStore.emailIsEmpty) {
+      message.push('Не заполенено поле "Email"');
     }
-    if (!profileStore.passwordIsDisabled && userStore.passwordIsEmpty) {
-      showAlert('Ошибка! Поле пароль должно быть заполнено')
-      return false;
+    if (!profileStore.passwordIsDisabled && profileStore.passwordIsEmpty) {
+      message.push('Не заполенено поле "Пароль"');
     }
-    if (!profileStore.confirmPasswordIsDisabled && userStore.confirmPasswordIsEmpty) {
-      showAlert('Ошибка! Поле подтверждение пароля должно быть заполнено')
-      return false;
+    if (!profileStore.confirmPasswordIsDisabled && profileStore.confirmPasswordIsEmpty) {
+      message.push('Не заполенено поле "Подтверждение пароля"');
+    }
+    if (!profileStore.emailIsDisabled && !profileStore.emailIsValid) {
+      message.push('Не корректно заполнено поле Email')
+    }
+    if ((!profileStore.passwordIsDisabled || !profileStore.confirmPasswordIsDisabled) && !profileStore.passwordsMatch) {
+      message.push('Пароли не совпадают')
     }
 
-    if ((!profileStore.confirmPasswordIsDisabled || !profileStore.passwordIsDisabled) && !userStore.passwordsMatch) {
-      showAlert('Ошибка! Пароли не совпадают')
-      return false;
-    }
-
-    return true;
-  }
+    return 'Ошибка!\n' + message.join('\n');
+  })
 
   async function updateProfile() {
     try {
-      if (!validFields()) return
+      if (!formIsValid.value) return showAlert(getErrorMessage.value)
 
       await profileStore.updateProfile()
       profileStore.disableFields()
-      userStore.setPassword('')
-      userStore.setConfirmPassword('')
+      profileStore.setPassword('')
+      profileStore.setConfirmPassword('')
       showAlert('Пользователь обновлен')
     } catch (e) {
       if (e.response.data.message) {

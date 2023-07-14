@@ -20,11 +20,11 @@
 
 <script setup>
   import {computed, onMounted, ref} from "vue";
-  import {useUserStore} from "@/stores/userStore";
+  import {useAuthStore} from "@/stores/authStore";
 
-  const userStore = useUserStore()
   const delaySeconds = 90
   const time = ref(0)
+  const authStore = useAuthStore()
 
   const showResendButton = computed(() => {
     return time.value === 0
@@ -42,7 +42,7 @@
   function resendEmail() {
     time.value = delaySeconds
     startTimer()
-    userStore.sendConfirmationCode()
+    authStore.sendConfirmationCode()
   }
 
   onMounted(() => {

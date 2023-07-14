@@ -8,25 +8,32 @@
 <script setup>
   import Alert from "@/components/Alert.vue";
   import UserWidget from "@/components/UserWidget.vue";
-  import {useUserStore} from "@/stores/userStore";
   import {useNavigationStore} from "@/stores/navigationStore";
   import {onMounted, ref, shallowRef} from "vue";
-  import {useProfileStore} from "@/stores/useProfileStore";
+  import {useAuthStore} from "@/stores/authStore";
+  import {useProfileStore} from "@/stores/profileStore";
 
   const navStore = useNavigationStore()
-  const userStore = useUserStore()
+  const authStore = useAuthStore()
   const profileStore = useProfileStore()
-
   const loading = ref(true);
 
   onMounted( async () => {
-    await userStore.setAuthStatus()
-    navStore.setSection(shallowRef(navStore.regForm))
-    if (userStore.authStatus) {
-      navStore.setSection(navStore.profileSection)
-      profileStore.getProfile()
+    try {
+      const { authorization } = await authStore.getAuthStatus()
+      if (authorization) {
+        navStore.setSection(navStore.profileSection)
+        await profileStore.getProfile()
+      } else {
+        navStore.setSection(shallowRef(navStore.regForm))
+      }
+    } catch (e) {
+      if (e.response?.status === 401) {
+        console.log(e)
+      }
+    } finally {
+      loading.value = false
     }
-    loading.value = false
   })
 </script>
 

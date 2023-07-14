@@ -23,18 +23,14 @@
 <script setup>
   import NavigationLink from "@/common/NavigationLink.vue";
   import {useNavigationStore} from "@/stores/navigationStore";
-  import {useUserStore} from "@/stores/userStore";
 
   const navStore = useNavigationStore()
-  const { resetUserData } = useUserStore()
 
   function toRegForm() {
-    resetUserData()
     navStore.setSection(navStore.loginForm)
   }
 
   function toLoginForm() {
-    resetUserData()
     navStore.setSection(navStore.regForm)
   }
 </script>
